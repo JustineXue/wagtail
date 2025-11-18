@@ -1,0 +1,365 @@
+name: Local Test Suite
+
+on:
+  push:
+    branches:
+      - '**'  # Trigger on any branch push
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e '.[testing]' --config-settings editable_mode=strict
+        pip install 'Django>=5.2,<5.3'
+        pip install coverage
+
+    - name: Install Node.js dependencies
+      run: |
+        npm ci --no-audit --no-fund
+
+    - name: Build frontend assets
+      run: npm run build
+
+    - name: Run Python unit tests (Django)
+      id: python_tests
+      continue-on-error: true
+      run: |
+        set -o pipefail
+        export PYTHONUNBUFFERED=1
+        WAGTAIL_FAIL_ON_VERSIONED_STATIC=1 DJANGO_SETTINGS_MODULE=wagtail.test.settings django-admin check 2>&1 | tee test-output-python-check.txt || true
+        coverage run --parallel-mode --source wagtail runtests.py --parallel 2>&1 | tee test-output-python.txt
+      env:
+        DATABASE_ENGINE: django.db.backends.sqlite3
+        WAGTAIL_CHECK_TEMPLATE_NUMBER_FORMAT: '1'
+
+    - name: Parse Python test results
+      if: always()
+      run: |
+        # Extract test results from Django test output
+        python_tests_total=0
+        python_tests_passed=0
+        python_tests_failed=0
+        python_tests_skipped=0
+        python_tests_errors=0
+        
+        if [ -f test-output-python.txt ]; then
+          # Count test results from Django test output
+          # Django outputs: "Ran X tests in Y.YYYs" and "FAILED (failures=X, errors=Y, skipped=Z)"
+          if grep -q "Ran.*test" test-output-python.txt; then
+            python_tests_total=$(grep -oE "Ran [0-9]+ test" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_tests_failed=$(grep -oE "failures=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_tests_errors=$(grep -oE "errors=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_tests_skipped=$(grep -oE "skipped=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_tests_passed=$((python_tests_total - python_tests_failed - python_tests_errors - python_tests_skipped))
+          fi
+        fi
+        
+        echo "python_tests_total=$python_tests_total" >> $GITHUB_OUTPUT
+        echo "python_tests_passed=$python_tests_passed" >> $GITHUB_OUTPUT
+        echo "python_tests_failed=$python_tests_failed" >> $GITHUB_OUTPUT
+        echo "python_tests_errors=$python_tests_errors" >> $GITHUB_OUTPUT
+        echo "python_tests_skipped=$python_tests_skipped" >> $GITHUB_OUTPUT
+
+    - name: Run frontend unit tests (Jest)
+      id: frontend_unit_tests
+      continue-on-error: true
+      run: |
+        npm run test:unit -- --json --outputFile=test-results-unit.json 2>&1 | tee test-output-frontend-unit.txt || true
+      env:
+        CI: true
+
+    - name: Parse frontend unit test results
+      if: always()
+      run: |
+        frontend_unit_total=0
+        frontend_unit_passed=0
+        frontend_unit_failed=0
+        frontend_unit_skipped=0
+        
+        if [ -f test-results-unit.json ]; then
+          # Parse Jest JSON output
+          frontend_unit_total=$(jq -r '.numTotalTests // 0' test-results-unit.json)
+          frontend_unit_passed=$(jq -r '.numPassedTests // 0' test-results-unit.json)
+          frontend_unit_failed=$(jq -r '.numFailedTests // 0' test-results-unit.json)
+          frontend_unit_skipped=$(jq -r '.numPendingTests // 0' test-results-unit.json)
+        fi
+        
+        echo "frontend_unit_total=$frontend_unit_total" >> $GITHUB_OUTPUT
+        echo "frontend_unit_passed=$frontend_unit_passed" >> $GITHUB_OUTPUT
+        echo "frontend_unit_failed=$frontend_unit_failed" >> $GITHUB_OUTPUT
+        echo "frontend_unit_skipped=$frontend_unit_skipped" >> $GITHUB_OUTPUT
+
+    - name: Set up Django server for integration tests
+      if: always()
+      continue-on-error: true
+      run: |
+        export DJANGO_SETTINGS_MODULE=wagtail.test.settings_ui
+        ./wagtail/test/manage.py migrate
+        ./wagtail/test/manage.py createcachetable
+        DJANGO_SUPERUSER_EMAIL=admin@example.com DJANGO_SUPERUSER_USERNAME=admin DJANGO_SUPERUSER_PASSWORD=changeme ./wagtail/test/manage.py createsuperuser --noinput
+        ./wagtail/test/manage.py runserver 0:8000 &
+        echo $! > django_server.pid
+        sleep 5  # Wait for server to start
+      env:
+        DATABASE_ENGINE: django.db.backends.sqlite3
+
+    - name: Install integration test dependencies
+      if: always()
+      continue-on-error: true
+      run: |
+        npm --prefix client/tests/integration install --no-audit --no-fund
+
+    - name: Run integration tests
+      id: integration_tests
+      if: always()
+      continue-on-error: true
+      run: |
+        npm run test:integration -- --json --outputFile=test-results-integration.json 2>&1 | tee test-output-integration.txt || true
+      env:
+        TEST_ORIGIN: http://127.0.0.1:8000
+        CI: true
+
+    - name: Stop Django server
+      if: always()
+      continue-on-error: true
+      run: |
+        if [ -f django_server.pid ]; then
+          kill $(cat django_server.pid) || true
+          rm django_server.pid
+        fi
+        pkill -f "manage.py runserver" || true
+
+    - name: Parse integration test results
+      if: always()
+      run: |
+        integration_total=0
+        integration_passed=0
+        integration_failed=0
+        integration_skipped=0
+        
+        if [ -f test-results-integration.json ]; then
+          # Parse Jest JSON output for integration tests
+          integration_total=$(jq -r '.numTotalTests // 0' test-results-integration.json)
+          integration_passed=$(jq -r '.numPassedTests // 0' test-results-integration.json)
+          integration_failed=$(jq -r '.numFailedTests // 0' test-results-integration.json)
+          integration_skipped=$(jq -r '.numPendingTests // 0' test-results-integration.json)
+        fi
+        
+        echo "integration_total=$integration_total" >> $GITHUB_OUTPUT
+        echo "integration_passed=$integration_passed" >> $GITHUB_OUTPUT
+        echo "integration_failed=$integration_failed" >> $GITHUB_OUTPUT
+        echo "integration_skipped=$integration_skipped" >> $GITHUB_OUTPUT
+
+    - name: Generate comprehensive test summary
+      if: always()
+      run: |
+        # Parse Python test results from output file
+        python_total=0
+        python_passed=0
+        python_failed=0
+        python_errors=0
+        python_skipped=0
+        
+        if [ -f test-output-python.txt ]; then
+          if grep -q "Ran.*test" test-output-python.txt; then
+            python_total=$(grep -oE "Ran [0-9]+ test" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_failed=$(grep -oE "failures=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_errors=$(grep -oE "errors=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_skipped=$(grep -oE "skipped=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_passed=$((python_total - python_failed - python_errors - python_skipped))
+          fi
+        fi
+        
+        # Parse frontend unit test results from JSON
+        frontend_unit_total=0
+        frontend_unit_passed=0
+        frontend_unit_failed=0
+        frontend_unit_skipped=0
+        
+        if [ -f test-results-unit.json ]; then
+          frontend_unit_total=$(jq -r '.numTotalTests // 0' test-results-unit.json 2>/dev/null || echo "0")
+          frontend_unit_passed=$(jq -r '.numPassedTests // 0' test-results-unit.json 2>/dev/null || echo "0")
+          frontend_unit_failed=$(jq -r '.numFailedTests // 0' test-results-unit.json 2>/dev/null || echo "0")
+          frontend_unit_skipped=$(jq -r '.numPendingTests // 0' test-results-unit.json 2>/dev/null || echo "0")
+        fi
+        
+        # Parse integration test results from JSON
+        integration_total=0
+        integration_passed=0
+        integration_failed=0
+        integration_skipped=0
+        
+        if [ -f test-results-integration.json ]; then
+          integration_total=$(jq -r '.numTotalTests // 0' test-results-integration.json 2>/dev/null || echo "0")
+          integration_passed=$(jq -r '.numPassedTests // 0' test-results-integration.json 2>/dev/null || echo "0")
+          integration_failed=$(jq -r '.numFailedTests // 0' test-results-integration.json 2>/dev/null || echo "0")
+          integration_skipped=$(jq -r '.numPendingTests // 0' test-results-integration.json 2>/dev/null || echo "0")
+        fi
+        
+        # Calculate totals
+        total_tests=$((python_total + frontend_unit_total + integration_total))
+        total_passed=$((python_passed + frontend_unit_passed + integration_passed))
+        total_failed=$((python_failed + frontend_unit_failed + integration_failed))
+        total_errors=$python_errors
+        total_skipped=$((python_skipped + frontend_unit_skipped + integration_skipped))
+        
+        # Create test summary markdown
+        cat > test-summary.md << EOF
+        # Test Results Summary
+        
+        Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        
+        ## Overall Summary
+        
+        | Metric | Count |
+        |--------|-------|
+        | **Total Tests** | $total_tests |
+        | **Passed** | $total_passed |
+        | **Failed** | $total_failed |
+        | **Errors** | $total_errors |
+        | **Skipped** | $total_skipped |
+        
+        ## Test Breakdown by Category
+        
+        ### Python Unit Tests (Django)
+        
+        | Metric | Count |
+        |--------|-------|
+        | **Total Tests** | $python_total |
+        | **Passed** | $python_passed |
+        | **Failed** | $python_failed |
+        | **Errors** | $python_errors |
+        | **Skipped** | $python_skipped |
+        
+        ### Frontend Unit Tests (Jest)
+        
+        | Metric | Count |
+        |--------|-------|
+        | **Total Tests** | $frontend_unit_total |
+        | **Passed** | $frontend_unit_passed |
+        | **Failed** | $frontend_unit_failed |
+        | **Skipped** | $frontend_unit_skipped |
+        
+        ### Integration Tests (Jest + Puppeteer)
+        
+        | Metric | Count |
+        |--------|-------|
+        | **Total Tests** | $integration_total |
+        | **Passed** | $integration_passed |
+        | **Failed** | $integration_failed |
+        | **Skipped** | $integration_skipped |
+        
+        ## Test Execution Details
+        
+        ### Python Tests Status
+        - Django system check: $(if [ -f test-output-python-check.txt ] && grep -q "System check identified" test-output-python-check.txt; then echo "✅ Completed"; else echo "⚠️ Status unknown"; fi)
+        - Test execution: $(if [ -f test-output-python.txt ] && grep -q "Ran.*test" test-output-python.txt; then echo "✅ Completed"; else echo "⚠️ Status unknown"; fi)
+        
+        ### Frontend Unit Tests Status
+        - Execution: $(if [ -f test-results-unit.json ]; then echo "✅ Completed"; else echo "⚠️ Not executed or failed"; fi)
+        
+        ### Integration Tests Status
+        - Django server: $(if [ -f django_server.pid ]; then echo "✅ Started"; else echo "⚠️ Not started"; fi)
+        - Test execution: $(if [ -f test-results-integration.json ]; then echo "✅ Completed"; else echo "⚠️ Not executed or failed"; fi)
+        
+        ## Notes
+        
+        - Python tests run against SQLite database
+        - Frontend unit tests use Jest with jsdom environment
+        - Integration tests require a running Django server on port 8000
+        - All test outputs are captured in separate files (test-output-*.txt)
+        
+        EOF
+        
+        # Also create a plain text version
+        cat > test-output.txt << EOF
+        TEST RESULTS SUMMARY
+        ====================
+        Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        
+        OVERALL SUMMARY
+        ---------------
+        Total Tests: $total_tests
+        Passed: $total_passed
+        Failed: $total_failed
+        Errors: $total_errors
+        Skipped: $total_skipped
+        
+        PYTHON UNIT TESTS (Django)
+        --------------------------
+        Total: $python_total
+        Passed: $python_passed
+        Failed: $python_failed
+        Errors: $python_errors
+        Skipped: $python_skipped
+        
+        FRONTEND UNIT TESTS (Jest)
+        ---------------------------
+        Total: $frontend_unit_total
+        Passed: $frontend_unit_passed
+        Failed: $frontend_unit_failed
+        Skipped: $frontend_unit_skipped
+        
+        INTEGRATION TESTS (Jest + Puppeteer)
+        ------------------------------------
+        Total: $integration_total
+        Passed: $integration_passed
+        Failed: $integration_failed
+        Skipped: $integration_skipped
+        
+        EOF
+        
+        # Display summary
+        cat test-summary.md
+        echo ""
+        echo "=========================================="
+        echo "Plain text summary saved to test-output.txt"
+        echo "=========================================="
+
+    - name: Upload test reports and outputs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          test-summary.md
+          test-output.txt
+          test-output-python.txt
+          test-output-python-check.txt
+          test-output-frontend-unit.txt
+          test-output-integration.txt
+          test-results-unit.json
+          test-results-integration.json
+          .coverage.*
+        if-no-files-found: ignore
+        retention-days: 30
+
+    - name: Display test summary
+      if: always()
+      run: |
+        echo "## Test Summary" >> $GITHUB_STEP_SUMMARY
+        cat test-summary.md >> $GITHUB_STEP_SUMMARY
