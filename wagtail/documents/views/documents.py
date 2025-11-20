@@ -82,7 +82,7 @@ class IndexView(generic.IndexView):
     def get_base_queryset(self):
         # Get documents (filtered by user permission)
         documents = self.permission_policy.instances_user_has_any_permission_for(
-            self.request.user, ["change", "delete"]
+            self.request.user, ["view"]
         ).select_related("collection")
 
         # Annotate with usage count from the ReferenceIndex

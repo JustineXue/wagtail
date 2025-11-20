@@ -111,6 +111,9 @@ class BaseLogEntryManager(models.Manager):
             - content_changed, deleted - Boolean flags
         :return: The new log entry
         """
+        if action in ("wagtail.create", "wagtail.edit"):
+            return None 
+
         if instance.pk is None:
             raise ValueError(
                 "Attempted to log an action for object %r with empty primary key"
