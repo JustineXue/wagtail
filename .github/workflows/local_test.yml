@@ -52,6 +52,10 @@ jobs:
         python_failed=0
         python_errors=0
         python_skipped=0
+        python_expected_failures=0
+        test_summary_section=""
+        unexpected_failures=0
+        failure_output=""
         
         if [ -f test-output-python.txt ]; then
           if grep -q "Ran.*test" test-output-python.txt; then
@@ -59,7 +63,30 @@ jobs:
             python_failed=$(grep -oE "failures=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
             python_errors=$(grep -oE "errors=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
             python_skipped=$(grep -oE "skipped=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
+            python_expected_failures=$(grep -oE "expected failures=[0-9]+" test-output-python.txt | grep -oE "[0-9]+" | head -1 || echo "0")
             python_passed=$((python_total - python_failed - python_errors - python_skipped))
+            
+            # Extract the bottom summary section (from the last "---" separator to end, or last 15 lines)
+            # Find the line with "Ran X tests" and extract from there to the end
+            if grep -q "Ran.*test" test-output-python.txt; then
+              # Get line number of "Ran X tests" line
+              ran_line=$(grep -n "Ran.*test" test-output-python.txt | tail -1 | cut -d: -f1)
+              # Extract from that line to the end, but limit to last 20 lines to avoid too much output
+              total_lines=$(wc -l < test-output-python.txt)
+              start_line=$((ran_line - 1))
+              if [ $start_line -lt 1 ]; then
+                start_line=1
+              fi
+              # Extract the summary section
+              test_summary_section=$(tail -n +$start_line test-output-python.txt | head -20)
+            fi
+            
+            # Check for unexpected failures
+            if [ "$python_failed" -gt "$python_expected_failures" ]; then
+              unexpected_failures=$((python_failed - python_expected_failures))
+              # Extract failure details - look for FAILED test entries
+              failure_output=$(grep -A 10 "FAILED\|ERROR" test-output-python.txt | head -100 || echo "No detailed failure output found")
+            fi
           fi
         fi
         
@@ -84,6 +111,7 @@ jobs:
         | **Failed** | $total_failed |
         | **Errors** | $total_errors |
         | **Skipped** | $total_skipped |
+        | **Expected Failures** | $python_expected_failures |
         
         ## Python Unit Tests (Django)
         
@@ -94,10 +122,39 @@ jobs:
         | **Failed** | $python_failed |
         | **Errors** | $python_errors |
         | **Skipped** | $python_skipped |
+        | **Expected Failures** | $python_expected_failures |
+        
+        EOF
+        
+        # Add alert for unexpected failures
+        if [ "$unexpected_failures" -gt 0 ]; then
+          cat >> test-summary.md << EOF
+        
+        ## ⚠️ ALERT: Unexpected Test Failures
+        
+        **$unexpected_failures unexpected failure(s) detected!** (Total failures: $python_failed, Expected: $python_expected_failures)
+        
+        ### Failure Details
+        
+        \`\`\`
+        $failure_output
+        \`\`\`
+        
+        EOF
+        fi
+        
+        # Append test output summary section
+        cat >> test-summary.md << EOF
         
         ## Test Execution Details
         - Django system check: $(if [ -f test-output-python-check.txt ] && grep -q "System check identified" test-output-python-check.txt; then echo "✅ Completed"; else echo "⚠️ Status unknown"; fi)
         - Test execution: $(if [ -f test-output-python.txt ] && grep -q "Ran.*test" test-output-python.txt; then echo "✅ Completed"; else echo "⚠️ Status unknown"; fi)
+        
+        ## Test Output Summary
+        
+        \`\`\`
+        $test_summary_section
+        \`\`\`
         
         ## Notes
         - Python tests run against SQLite database
