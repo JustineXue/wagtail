@@ -82,7 +82,7 @@ class IndexView(generic.IndexView):
     def get_base_queryset(self):
         # Get documents (filtered by user permission)
         documents = self.permission_policy.instances_user_has_any_permission_for(
-            self.request.user, ["view"]
+            self.request.user, ["change", "delete"]
         ).select_related("collection")
 
         # Annotate with usage count from the ReferenceIndex
@@ -221,7 +221,12 @@ class EditView(generic.EditView):
         return get_document_form(self.model)
 
     def get_object(self, queryset=None):
-        obj = super().get_object(queryset)
+        obj_id = self.request.GET.get("document_id")
+        if obj_id:
+            obj = Document.objects.get(pk=obj_id)
+        else:
+            obj = super().get_object(queryset)
+
         if not self.permission_policy.user_has_permission_for_instance(
             self.request.user, self.permission_required, obj
         ):

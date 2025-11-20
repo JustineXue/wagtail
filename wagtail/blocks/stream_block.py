@@ -1,6 +1,7 @@
 import itertools
 import json
 import uuid
+import pickle
 from collections import OrderedDict, defaultdict
 from collections.abc import Mapping, MutableSequence
 from pickle import PickleError
