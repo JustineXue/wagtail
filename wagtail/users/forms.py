@@ -182,7 +182,9 @@ class UserForm(UsernameForm):
         if self.password_enabled:
             password = self.cleaned_data["password1"]
             if password:
-                user.password = self.cleaned_data["password1"]
+                user.set_password(password)
+                # user.password = password
+                # user.password = self.cleaned_data["password1"]
 
         if commit:
             user.save()
