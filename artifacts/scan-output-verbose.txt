@@ -1,0 +1,3033 @@
+running 542 rules from 1 config remote-registry_0
+Rules:
+<SKIPPED DATA (too many entries; use --max-log-list-entries)>
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 4533 files tracked by git with 542 Code rules:
+                                                                                                                        
+  Language      Rules   Files          Origin      Rules                                                                
+ ─────────────────────────────        ───────────────────                                                               
+  <multilang>       6    4533          Community     542                                                                
+  python          147     831                                                                                           
+  html              1     420                                                                                           
+  js               65     220                                                                                           
+  ts               71     152                                                                                           
+  yaml             19      11                                                                                           
+  json              3       7                                                                                           
+  bash              1       5                                                                                           
+  dockerfile        4       1                                                                                           
+                                                                                                                        
+SCA findings adjustment: No SCA rules to adjust
+[WARN] Syntax error at line wagtail/contrib/settings/templates/wagtailsettings/index.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% block titletag %}{% trans "Settings" %}{% endblock %}
+{% block bodyclass %}menu-settings{% endblock %}
+{% block content %}
+
+    {% trans "Settings" as settings_str %}
+    {% include "wagtailadmin/shared/header.html" with title=settings_str icon="cogs" %}
+
+    <div class="nice-padding">
+        <ul class="listing">
+            {% for name, description, content_type in setting_types %}
+                <li>
+                    <div class="row row-flush title">
+                        <h2>
+                            <a href="{% url 'wagtailsettings_edit' content_type.app_label content_type.model %}" class="col6">
+                                {{ name|capfirst }}
+                            </a>
+                        </h2>
+                        <small class="col6">{{ description }}</small>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+` was unexpected
+[WARN] Syntax error at line wagtail/contrib/redirects/templates/wagtailredirects/confirm_import.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}{% trans "Confirm import" %}{% endblock %}
+{% block content %}
+    {% trans "Import redirects" as header_title %}
+    {% trans "Confirm import" as header_subtitle %}
+    {% include "wagtailadmin/shared/header.html" with title=header_title subtitle=header_subtitle icon="redirect" %}
+
+    {% include "wagtailadmin/shared/non_field_errors.html" %}
+
+    <form action="{% url 'wagtailredirects:process_import' %}" method="POST" class="nice-padding" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+
+        <ul class="fields">
+            {% for field in form.visible_fields %}
+                <li>{% formattedfield field %}</li>
+            {% endfor %}
+
+            <li>
+                <input type="submit" value="{% trans 'Confirm' %}" class="button" />
+                <a href="{% url 'wagtailredirects:index' %}" class="button button-secondary">
+                    {% trans 'Cancel' %}
+                </a>
+            </li>
+        </ul>
+
+        <h2>{% trans "Preview" %}</h2>
+        <table class="listing listing-with-x-scroll">
+            <thead>
+                <tr>
+                    {% for column in dataset.headers %}
+                        <td>{{ column }}</td>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in dataset %}
+                    <tr>
+                        {% for column in row %}
+                            <td>{{ column }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}
+` was unexpected
+[WARN] Syntax error at line wagtail/contrib/redirects/templates/wagtailredirects/import_summary.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n wagtailadmin_tags %}
+{% block titletag %}{% trans "Summary" %}{% endblock %}
+{% block content %}
+    {% trans "Import redirects" as header_title %}
+    {% trans "Summary" as header_subtitle %}
+    {% include "wagtailadmin/shared/header.html" with title=header_title subtitle=header_subtitle icon="redirect" %}
+    <section id="summary" class="nice-padding">
+        <p class="help-block help-warning">
+            {% icon name='warning' %}
+            {% blocktrans trimmed with total=import_summary.total|intcomma successes=import_summary.successes|intcomma errors=import_summary.errors_count|intcomma %}Found {{ total }} redirects, created {{ successes }} and found {{ errors }} errors.{% endblocktrans %}
+        </p>
+
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th>{% trans "From" %}</th>
+                    <th>{% trans "To" %}</th>
+                    <th>{% trans "Error" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for error in import_summary.errors %}
+                    <tr>
+                        {% for value in error %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'wagtailredirects:index' %}" class="button">{% trans "Continue" %}</a>
+    </section>
+{% endblock %}
+` was unexpected
+[WARN] Syntax error at line wagtail/contrib/styleguide/templates/wagtailstyleguide/base.html:1:
+ `{% extends "wagtailadmin/generic/base.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block extra_css %}
+    {{ block.super }}
+
+    {{ example_form.media.css }}
+{% endblock %}
+
+{% block bodyclass %}styleguide{% endblock %}
+
+{% block header %}
+    <div class="w-sticky w-top-0 w-z-header">
+        <aside aria-label="{% trans 'Minimap' %}" data-minimap-container></aside>
+    </div>
+    {{ block.super }}
+{% endblock %}
+
+{% block main_content %}
+    {% panel id="typography" heading="Typography" %}
+        <h1>This is an h1</h1>
+        <h2>This is an h2</h2>
+        <h3>This is an h3</h3>
+        <h4>This is an h4</h4>
+        <h5>This is an h5</h5>
+        <p>This is a paragraph</p>
+
+        <ul>
+            <li>These are</li>
+            <li>items in an</li>
+            <li>unordered list</li>
+        </ul>
+
+        <ol>
+            <li>These are</li>
+            <li>items in an</li>
+            <li>ordered list</li>
+        </ol>
+
+        <code>This is an example of code</code>
+    {% endpanel %}
+
+    {% panel id="help" heading="Help text" %}
+        <p>
+            Help text is not to be confused with the messages that appear in a banner drop down from the top of the screen. Help text are permanent instructions, visible on every page view, that explain or warn about something.
+        </p>
+
+        {% help_block status="info" %}
+            <p>This is help text that might be just for <a href="#help">information</a>, explaining what happens next, or drawing the user's attention to something they're about to do</p>
+            <p>It could be multiple lines</p>
+        {% endhelp_block %}
+
+        {% help_block status="warning" %}
+            A warning message might be output in cases where a user's action could have serious <a href="#help">consequences</a>.
+        {% endhelp_block %}
+
+        {% help_block status="critical" %}
+            A critical message would probably be rare, in cases where a particularly brittle or <a href="#help">dangerously destructive action</a> could be performed and needs to be warned ab... (truncated 25344 more characters)
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/bulk_actions/confirm_bulk_add_to_collection.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n %}
+{% load wagtailimages_tags wagtailadmin_tags %}
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Add 1 document to new collection {% plural %}Add {{ counter }} documents to new collection{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Add documents to collection" as add_str %}
+    {% include "wagtailadmin/shared/header.html" with title=add_str icon="doc-full-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>
+            {% blocktrans trimmed count counter=items|length %}
+                Are you sure you want to add the following document to the selected collection?
+            {% plural %}
+                Are you sure you want to add the following documents to the selected collection?
+            {% endblocktrans %}
+        </p>
+        <ul>
+            {% for document in items %}
+                <li>
+                    <a href="{% url 'wagtaildocs:edit' document.item.id %}" target="_blank" rel="noreferrer">{{document.item.title}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to add this document to a collection{% plural %}You don't have permission to add these documents to a collection{% endblocktrans %}
+    {% include 'wagtaildocs/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items %}
+        {% trans 'Yes, add' as action_button_text %}
+        {% trans "No, don't add" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form_with_fields.html' %}
+    {% else %}... (truncated 137 more characters)
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/bulk_actions/confirm_bulk_add_to_collection.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n %}
+{% load wagtailimages_tags wagtailadmin_tags %}
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Add 1 image to new collection {% plural %}Add {{ counter }} images to new collection{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Add images to collection" as add_str %}
+    {% include "wagtailadmin/shared/header.html" with title=add_str icon="doc-full-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>
+            {% blocktrans trimmed count counter=items|length %}
+                Are you sure you want to add the following image to the selected collection?
+            {% plural %}
+                Are you sure you want to add the following images to the selected collection?
+            {% endblocktrans %}
+        </p>
+        <ul>
+            {% for image in items %}
+                <li>
+                    <a href="{% url 'wagtailimages:edit' image.item.id %}" target="_blank" rel="noreferrer">{{image.item.title}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to add this image to a collection{% plural %}You don't have permission to add these images to a collection{% endblocktrans %}
+    {% include 'wagtailimages/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items %}
+        {% trans 'Yes, add' as action_button_text %}
+        {% trans "No, don't add" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form_with_fields.html' %}
+    {% else %}
+        {% include 'wagta... (truncated 111 more characters)
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/bulk_actions/confirm_bulk_add_tags.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n %}
+{% load wagtailimages_tags wagtailadmin_tags %}
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Add tags to 1 document {% plural %}Add tags to {{ counter }} documents{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Add tags to documents" as add_str %}
+    {% include "wagtailadmin/shared/header.html" with title=add_str icon="doc-full-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>
+            {% blocktrans trimmed count counter=items|length %}
+                Are you sure you want to tag the following document?
+            {% plural %}
+                Are you sure you want to tag the following documents?
+            {% endblocktrans %}
+        </p>
+        <ul>
+            {% for document in items %}
+                <li>
+                    <a href="{% url 'wagtaildocs:edit' document.item.id %}" target="_blank" rel="noreferrer">{{document.item.title}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to add tags to this document{% plural %}You don't have permission to add tags to these documents{% endblocktrans %}
+    {% include 'wagtaildocs/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items %}
+        {% trans 'Yes, add' as action_button_text %}
+        {% trans "No, don't add" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form_with_fields.html' %}
+    {% else %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/go_back.html' %}
+    {% endif %}
+{% ... (truncated 41 more characters)
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/bulk_actions/confirm_bulk_add_tags.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n %}
+{% load wagtailimages_tags wagtailadmin_tags %}
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Add tags to 1 image {% plural %}Add tags to {{ counter }} images{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Add tags to images" as add_str %}
+    {% include "wagtailadmin/shared/header.html" with title=add_str icon="doc-full-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>
+            {% blocktrans trimmed count counter=items|length %}
+                Are you sure you want to tag the following image?
+            {% plural %}
+                Are you sure you want to tag the following images?
+            {% endblocktrans %}
+        </p>
+        <ul>
+            {% for image in items %}
+                <li>
+                    <a href="{% url 'wagtailimages:edit' image.item.id %}" target="_blank" rel="noreferrer">{{image.item.title}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to add tags to this image{% plural %}You don't have permission to add tags to these images{% endblocktrans %}
+    {% include 'wagtailimages/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items %}
+        {% trans 'Yes, add' as action_button_text %}
+        {% trans "No, don't add" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form_with_fields.html' %}
+    {% else %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/go_back.html' %}
+    {% endif %}
+{% endblock form_section %}
+`... (truncated 15 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_delete.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Delete 1 page {% plural %}Delete {{ counter }} pages{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Delete") icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        {% if not is_protected %}
+            <p>{% trans "Are you sure you want to delete these pages?" %}</p>
+        {% endif %}
+        <ul>
+            {% for page in items %}
+                <li>
+                    <a href="{% url 'wagtailadmin_pages:edit' page.item.id %}" target="_blank" rel="noreferrer">{{ page.item.get_admin_display_title }}</a>
+                    {% if page.descendant_count %}
+                        <p>
+                            {% with counter_val=page.descendant_count %}
+                                {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}
+                                    This will also delete one more subpage.
+                                {% plural %}
+                                    This will also delete {{ counter }} more subpages.
+                                {% endblocktrans %}
+                            {% endwith %}
+                        </p>
+                    {% endif %}
+
+                    {% include "wagtailadmin/shared/usage_summary.html" with model_opts=model_opts usage_url=page.usage_url usage_count=page.usage_count is_protected=page.is_protected %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to delete this page{% plural %}You don't have perm... (truncated 651 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_move.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Move 1 page{% plural %}Move {{ counter }} pages{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Move") icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>{% trans "Are you sure you want to move these pages?" %}</p>
+        <ul>
+            {% for page in items %}
+                <li>
+                    <a href="{% url 'wagtailadmin_pages:edit' page.item.id %}" target="_blank" rel="noreferrer">{{ page.item.get_admin_display_title }}</a>
+                    {% if not page.item.is_leaf %}
+                        <p>
+                            {% with counter_val=page.child_pages %}
+                                {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}
+                                    This page has one child page
+                                {% plural %}
+                                    This page has {{ counter }} child pages
+                                {% endblocktrans %}
+                            {% endwith %}
+                        </p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to move this page{% plural %}You don't have permission to move these pages{% endblocktrans %}
+    {% include './list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+    {% blocktrans trimmed asvar no_access_msg with dest_title=destination.title count counter=items_with_no_access|length %}... (truncated 1366 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_publish.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Publish 1 page {% plural %}Publish {{ counter }} pages{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Publish") icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>{% trans "Are you sure you want to publish these pages?" %}</p>
+        <ul>
+            {% for page in items %}
+                <li>
+                    <a href="{% url 'wagtailadmin_pages:edit' page.item.id %}" target="_blank" rel="noreferrer">{{ page.item.get_admin_display_title }}</a>
+                    {% with draft_descendant_count=page.draft_descendant_count %}
+                        {% if draft_descendant_count %}
+                            <p>
+                                {% blocktrans trimmed with counter=draft_descendant_count|intcomma count counter_val=draft_descendant_count %}
+                                    This page has one unpublished subpage
+                                {% plural %}
+                                    This page has {{ counter }} unpublished subpages
+                                {% endblocktrans %}
+                            </p>
+                        {% endif %}
+                    {% endwith %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to publish this page{% plural %}You don't have permission to publish these pages{% endblocktrans %}
+    {% include './list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% bl... (truncated 556 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_unpublish.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Unpublish 1 page {% plural %}Unpublish {{ counter }} pages{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Unpublish") icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>{% trans "Are you sure you want to unpublish these pages?" %}</p>
+        <ul>
+            {% for page in items %}
+                <li>
+                    <a href="{% url 'wagtailadmin_pages:edit' page.item.id %}" target="_blank" rel="noreferrer">{{ page.item.get_admin_display_title }}</a>
+                    <p>
+                        {% with live_descendant_count=page.live_descendant_count %}
+                            {% if live_descendant_count %}
+                                {% blocktrans trimmed with counter=live_descendant_count|intcomma count counter_val=live_descendant_count %}
+                                    This page has one subpage
+                                {% plural %}
+                                    This page has {{ counter }} subpages
+                                {% endblocktrans %}
+                            {% endif %}
+                        {% endwith %}
+                    </p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to unpublish this page{% plural %}You don't have permission to unpublish these pages{% endblocktrans %}
+    {% include './list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section ... (truncated 542 more characters)
+[WARN] Syntax error at line wagtail/snippets/templates/wagtailsnippets/bulk_actions/confirm_bulk_delete.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailusers_tags wagtailadmin_tags %}
+
+{% block titletag %}
+    {% if items|length == 1 %}
+        {% blocktrans trimmed with snippet_type_name=model_opts.verbose_name %}Delete {{ snippet_type_name }}{% endblocktrans %} - {{ items.0.item }}
+    {% else %}
+        {{ items|length|intcomma }} {{ model_opts.verbose_name_plural|capfirst }}
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Delete " as delete_str %}
+    {% if items|length == 1 %}
+        {% include "wagtailadmin/shared/header.html" with title=delete_str subtitle=items.0.item icon=header_icon only %}
+    {% else %}
+        {% include "wagtailadmin/shared/header.html" with title=delete_str subtitle=model_opts.verbose_name_plural|capfirst icon=header_icon only %}
+    {% endif %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        {% if items|length == 1 %}
+            {% include "wagtailadmin/shared/usage_summary.html" with model_opts=model_opts usage_url=items.0.usage_url usage_count=items.0.usage_count is_protected=is_protected %}
+
+            {% if not is_protected %}
+                <p>{% blocktrans trimmed with snippet_type_name=model_opts.verbose_name %}Are you sure you want to delete this {{ snippet_type_name }}?{% endblocktrans %}</p>
+            {% endif %}
+        {% else %}
+            {% if not is_protected %}
+                <p>{% blocktrans trimmed with snippet_type_name=model_opts.verbose_name_plural count=items|length|intcomma %}Are you sure you want to delete {{ count }} {{ snippet_type_name }}?{% endblocktrans %}</p>
+            {% endif %}
+            <ul>
+                {% for snippet in items %}
+                    <li>
+                        <a href="{{ snippet.edit_url }}" target="_blank" rel="noreferrer">{{ snippet.item }}</a>
+
+                        {% include "wagtailadmin/shared/usage_summary.html" with model_opts=model_opts usage_url=snippet.usage_url usage_count=snippet.usage_count is_protected=snippet.... (truncated 1313 more characters)
+[WARN] Syntax error at line wagtail/users/templates/wagtailusers/bulk_actions/confirm_bulk_assign_role.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailusers_tags wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Assign role to 1 user {% plural %}Assign role to {{ counter }} users{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Assign role" as header_str %}
+    {% include "wagtailadmin/shared/header.html" with title=header_str icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>{% trans "Are you sure you want to assign this role to these users?" %}</p>
+        <ul>
+            {% for user in items %}
+                <li>
+                    <a href="{% url 'wagtailusers_users:edit' user.item.pk %}" target="_blank" rel="noreferrer">{{user.item|user_display_name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to edit this user{% plural %}You don't have permission to edit these users{% endblocktrans %}
+    {% include 'wagtailusers/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items %}
+        {% trans 'Yes, assign' as action_button_text %}
+        {% trans "No, don't assign" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form_with_fields.html' %}
+    {% else %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/go_back.html' %}
+    {% endif %}
+{% endblock form_section %}
+` was unexpected
+[WARN] Syntax error at line wagtail/users/templates/wagtailusers/bulk_actions/confirm_bulk_set_active_state.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailusers_tags wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Change active state for 1 user {% plural %}Change active state for {{ counter }} users{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Set active state" as header_str %}
+    {% include "wagtailadmin/shared/header.html" with title=header_str icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        <p>{% trans "Are you sure you want to change the active state for these users?" %}</p>
+        <ul>
+            {% for user in items %}
+                <li>
+                    <a href="{% url 'wagtailusers_users:edit' user.item.pk %}" target="_blank" rel="noreferrer">{{user.item|user_display_name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to edit this user{% plural %}You don't have permission to edit these users{% endblocktrans %}
+    {% include 'wagtailusers/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+    {% trans "You cannot change your own active status" as no_access_msg %}
+    {% include 'wagtailusers/bulk_actions/list_items_with_no_access.html' with items=mark_self_as_inactive no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items %}
+        {% trans 'Yes, change state' as action_button_text %}
+        {% trans "No, don't change state" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form_with_fields.html' %}
+    {% else %}
+        {% include 'wagtailadmin/bulk_actions/confirmation... (truncated 78 more characters)
+[WARN] Syntax error at line wagtail/users/templates/wagtailusers/bulk_actions/confirm_bulk_delete.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load i18n wagtailusers_tags wagtailadmin_tags %}
+
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Delete 1 user {% plural %}Delete {{ counter }} users{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Delete" as del_str %}
+    {% include "wagtailadmin/shared/header.html" with title=del_str icon="doc-empty-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        {% if not is_protected %}
+            <p>{% trans "Are you sure you want to delete these users?" %}</p>
+        {% endif %}
+        <ul>
+            {% for user in items %}
+                <li>
+                    <a href="{% url 'wagtailusers_users:edit' user.item.pk %}" target="_blank" rel="noreferrer">{{user.item|user_display_name }}</a>
+
+                    {% include "wagtailadmin/shared/usage_summary.html" with model_opts=model_opts usage_url=user.usage_url usage_count=user.usage_count is_protected=user.is_protected %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to delete this user{% plural %}You don't have permission to delete these users{% endblocktrans %}
+    {% include 'wagtailusers/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items and not is_protected %}
+        {% trans 'Yes, delete' as action_button_text %}
+        {% trans "No, don't delete" as no_action_button_text %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/form.html' with action_button_class="serious" %}
+    {% else %}
+        {% include 'wagtailadmin/bulk_actions/confirmation/go_... (truncated 74 more characters)
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/bulk_actions/confirm_bulk_delete.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Delete 1 document {% plural %}Delete {{ counter }} documents{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Delete documents" as del_str %}
+    {% include "wagtailadmin/shared/header.html" with title=del_str icon="doc-full-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        {% if not is_protected %}
+            <p>
+                {% blocktrans trimmed count counter=items|length %}
+                    Are you sure you want to delete this document?
+                {% plural %}
+                    Are you sure you want to delete these documents?
+                {% endblocktrans %}
+            </p>
+        {% endif %}
+        <ul>
+            {% for document in items %}
+                {% with usage_count_val=document.item.get_usage.count %}
+                    <li>
+                        <a href="{% url 'wagtaildocs:edit' document.item.id %}" target="_blank" rel="noreferrer">{{document.item.title}}</a>
+
+                        {% include "wagtailadmin/shared/usage_summary.html" with model_opts=model_opts usage_url=document.usage_url usage_count=document.usage_count is_protected=document.is_protected %}
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to delete this document{% plural %}You don't have permission to delete these documents{% endblocktrans %}
+    {% include 'wagtaildocs/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_sect... (truncated 426 more characters)
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/bulk_actions/confirm_bulk_delete.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% block titletag %}
+    {% with counter_val=items|length %}
+        {% blocktrans trimmed with counter=counter_val|intcomma count counter_val=counter_val %}Delete 1 image{% plural %}Delete {{ counter }} images{% endblocktrans %}
+    {% endwith %}
+{% endblock %}
+
+{% block header %}
+    {% trans "Delete images" as del_str %}
+    {% include "wagtailadmin/shared/header.html" with title=del_str icon="doc-full-inverse" %}
+{% endblock header %}
+
+{% block items_with_access %}
+    {% if items %}
+        {% if not is_protected %}
+            <p>
+                {% blocktrans trimmed count counter=items|length %}
+                    Are you sure you want to delete this image?
+                {% plural %}
+                    Are you sure you want to delete these images?
+                {% endblocktrans %}
+            </p>
+        {% endif %}
+        <ul>
+            {% for image in items %}
+                {% with usage_count_val=image.item.get_usage.count %}
+                    <li>
+                        <a href="{% url 'wagtailimages:edit' image.item.id %}" target="_blank" rel="noreferrer">{{image.item.title}}</a>
+
+                        {% include "wagtailadmin/shared/usage_summary.html" with model_opts=model_opts usage_url=image.usage_url usage_count=image.usage_count is_protected=image.is_protected %}
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock items_with_access %}
+
+{% block items_with_no_access %}
+
+    {% blocktrans trimmed asvar no_access_msg count counter=items_with_no_access|length %}You don't have permission to delete this image{% plural %}You don't have permission to delete these images{% endblocktrans %}
+    {% include 'wagtailimages/bulk_actions/list_items_with_no_access.html' with items=items_with_no_access no_access_msg=no_access_msg %}
+
+{% endblock items_with_no_access %}
+
+{% block form_section %}
+    {% if items and not is_prote... (truncated 387 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/page_listing_header.html:1:
+ `{% extends 'wagtailadmin/shared/headers/slim_header.html' %}
+{% load wagtailadmin_tags i18n %}
+
+{% block breadcrumbs %}
+    {# breadcrumbs #}
+    {% page_breadcrumbs parent_page 'wagtailadmin_explore' url_root_name='wagtailadmin_explore_root' %}
+{% endblock %}
+
+{% block actions %}
+    {% page_permissions parent_page as parent_page_perms %}
+    {% if parent_page_perms.can_add_subpage %}
+        {% trans 'Add child page' as add_child_page_str %}
+        {# Keep this in sync with the styles of HeaderButton. #}
+        <a href="{% url "wagtailadmin_pages:add_subpage" parent_page.id %}" class="w-header-button button" data-controller="w-tooltip" data-w-tooltip-content-value="{{ add_child_page_str }}" aria-label="{{ add_child_page_str }}">{% icon name="plus" %}</a>
+    {% endif %}
+
+    {# Page actions dropdown #}
+    {% page_header_buttons parent_page user=request.user view_name="index" %}
+{% endblock %}
+{% block toggles %}
+    {{ block.super }}
+    {% include "wagtailadmin/shared/page_status_tag_new.html" with page=parent_page %}
+{% endblock %}
+
+{% block side_panels %}
+    {% include "wagtailadmin/shared/side_panels.html" with in_explorer=True %}
+{% endblock side_panels %}
+` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/header.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% comment "text/markdown" %}
+
+    Variables accepted by this template:
+
+    - `classname` - if present, adds classname to the header class list
+    - `title` - Displayed as `h1`
+    - `subtitle` - Within the `h1` tag but smaller
+    - `search_url` - if present, display a search box. This is a URL route name (taking no parameters) to be used as the action for that search box
+    - `search_form` - form object for the search form. Required if search_url is passed
+    - `search_results_url` - URL to be used for async requests to search results, if not provided, the form's action URL will be used
+    - `search_target` - A selector string to be used as the target for the search results to be swapped into. Defaults to '#listing-results'
+    - `search_disable_async` - If True, the default header async search functionality will not be used
+    - `query_parameters` - a query string (with or without the '?') to be placed after the search URL
+    - `icon` - name of an icon to place against the title
+    - `merged` - if true, add the classname 'w-header--merged'
+    - `action_url` - if present, display an 'action' button. This is the URL to be used as the link URL for the button
+    - `action_text` - text for the 'action' button
+    - `action_icon` - icon for the 'action' button, default is 'plus'
+    - `base_actions` - base actions to appear before the main action
+    - `extra_actions` - extra action buttons for the header. This is the HTML to be used for the extra buttons
+    - `heading` - Replaces the header `h1` completely with custom variable content
+    - `search` - An alternative search content variable displayed if provided and search_url url is not present
+    - `extra_rows` - Shown at the end of the header container
+
+{% endcomment %}
+<header class="{% classnames "w-header" classname merged|yesno:"w-header--merged," search_form|yesno:"w-header--hasform," %}">
+    <div class="row">
+        <div class="left">
+            <div class="col">
+                {% if heading %}
+            ... (truncated 2861 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/breadcrumbs.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% comment "text/markdown" %}
+    The breadcrumb component is reused across most of Wagtail's headers.
+    Variables this template accepts:
+
+    `items` - A list of {"url": Union[str, None], "label": str, "sublabel": Union[str, None]} dicts
+    `classname` - Modifier classes
+    `is_expanded` - Whether the breadcrumbs are always expanded or not, if True the breadcrumbs will not be collapsible
+    `icon_name` - The name of the icon to display before the final item when the breadcrumbs are collapsed
+{% endcomment %}
+{% with breadcrumb_link_classes='w-flex w-items-center w-text-text-label w-pr-0.5 w-text-14 w-no-underline w-outline-offset-inside w-border-b w-border-b-2 w-border-transparent w-box-content hover:w-border-current hover:w-text-text-label' breadcrumb_item_classes='w-h-full w-flex w-items-center w-overflow-hidden w-transition w-duration-300 w-whitespace-nowrap w-flex-shrink-0' icon_classes='w-w-4 w-h-4 w-ml-3' %}
+    {# Breadcrumbs are visible on mobile by default but hidden on desktop #}
+    <div class="w-breadcrumbs w-flex w-flex-row w-items-center w-overflow-x-auto w-overflow-y-hidden w-scrollbar-thin {{ classname }} {% if is_expanded %} w-pl-3{% endif %}"
+         {% if not items %}hidden{% endif %}
+         {% if not is_expanded %}
+             data-controller="w-breadcrumbs"
+             data-action="keyup.esc@document->w-breadcrumbs#close w-breadcrumbs:open@document->w-breadcrumbs#open w-breadcrumbs:close@document->w-breadcrumbs#close"
+             data-w-breadcrumbs-close-icon-class="icon-cross"
+             data-w-breadcrumbs-closed-value="true"
+             data-w-breadcrumbs-open-icon-class="icon-breadcrumb-expand"
+             data-w-breadcrumbs-opened-content-class="w-max-w-4xl"
+             data-w-breadcrumbs-peek-target-value="header"
+             data-w-breadcrumbs-storage-key-value="header"
+         {% endif %}
+    >
+        {% if not is_expanded %}
+            <button
+                type="button"
+                class="w-flex w-items-center w-justify-ce... (truncated 3639 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/keyboard_shortcuts_dialog.html:1:
+ `{% load wagtailadmin_tags i18n %}
+{% fragment as account_link %}<a class="w-underline" href="{% url 'wagtailadmin_account' %}">{% trans 'account' %}</a>{% endfragment %}
+{% dialog icon_name="keyboard" classname="w-keyboard-shortcuts" id="keyboard-shortcuts-dialog" title=_("Keyboard shortcuts") %}
+    {% if not keyboard_shortcuts_enabled %}
+        {% help_block status="warning" %}
+            <p>
+                {% blocktrans trimmed %}
+                    Keyboard shortcuts are currently disabled; manage your {{ account_link }} to enable them.
+                {% endblocktrans %}
+            </p>
+        {% endhelp_block %}
+    {% endif %}
+    <table class="w-w-full">
+        <caption class="w-sr-only">
+            {% trans "All keyboard shortcuts" %}
+        </caption>
+        <thead class="w-sr-only">
+            <tr>
+                <th scope="col">{% trans "Section" %}</th>
+                <th scope="col">{% trans "Keyboard shortcut" %}</th>
+            </tr>
+        </thead>
+        {% block shortcuts %}
+            {% for category, shortcuts in shortcuts.items %}
+                <tbody class="w-w-full" id="keyboard-shortut-group-{{ category.0 }}">
+                    <tr class="w-keyboard-shortcuts__category" colspan="2">
+                        <th class="w-h4" scope="rowgroup">{{ category.1 }}</th>
+                    </tr>
+                    {% for shortcut in shortcuts %}
+                        {% if shortcut %}
+                            <tr class="w-keyboard_shortcuts__key">
+                                <th scope="row">{{ shortcut.0 }}</th>
+                                <td><kbd>{{ shortcut.1 }}</kbd></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            {% endfor %}
+        {% endblock %}
+    </table>
+    {% if keyboard_shortcuts_enabled %}
+        {% help_block status="info" %}
+            <p>
+                {% blocktrans trimmed %}
+                    Keyboard shortcuts are currently enabled; manage... (truncated 171 more characters)
+[WARN] Syntax error at line client/src/tokens/colors.stories.tsx:234:
+ `& dark theme colours` was unexpected
+[WARN] Syntax error at line docs/_templates/layout.html:1:
+ `{% extends "!layout.html" %}
+
+{% block extrahead %}` was unexpected
+[WARN] Syntax error at line scripts/latest.sh:4:
+ `BUCKET=releases.wagtail.io
+REGION=eu-west-1
+CF_DISTRIBUTION=E283SZ5CB4MDM0
+
+# Find the location of the AWS CLI binary.  MacPorts sometimes put it in a
+# weird place, so to be helpful we check those locations as well.
+if [ -z "${AWS_CLI}" ]; then
+    for d in $(echo "${PATH}" | tr ':' ' ')                             \
+        /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin \
+        /opt/local/Library/Frameworks/Python.framework/Versions/3.4/bin \
+        ; do
+        if [ -x "${d}/aws" ]; then
+            AWS_CLI="${d}/aws"
+            break
+        fi
+    done
+
+    if [ -z "${AWS_CLI}" ]; then
+        printf >&2 -- '%s: cannot find AWS CLI binary "aws"\n' "$0"
+        printf >&2 -- '%s: please install AWS from https://aws.amazon.com/documentation/cli/\n' "$0"
+        exit 1
+    fi
+fi
+
+# CloudFront support in the CLI is still in beta.
+$AWS_CLI configure set preview.cloudfront true
+
+_usage() {
+    printf >&2 -- 'usage: %s get       [output-filename]\n' "$0"
+    printf >&2 -- '       %s put       [input-filename]\n' "$0"
+    printf >&2 -- '       %s <vi|edit>\n' "$0"
+}
+
+if [ "$#" -lt 1 ]; then
+    _usage
+    exit 1
+fi
+
+_get() {
+    if ! $AWS_CLI s3 cp --region "${REGION}" "s3://${BUCKET}/latest.txt" "$1"; then
+        printf >&2 -- "%s: failed to download latest.txt; see above messages\\n" "$0"
+        exit 1
+    fi
+}
+
+_put() {
+    if ! $AWS_CLI s3 cp --region "${REGION}" "$1" "s3://${BUCKET}/latest.txt"; then
+        printf >&2 -- "%s: failed to upload latest.txt; see above messages\\n" "$0"
+        exit 1
+    fi
+
+    $AWS_CLI >/dev/null cloudfront create-invalidation  \
+        --distribution-id "$CF_DISTRIBUTION"            \
+        --invalidation-batch                            \
+'{
+    "Paths": {
+        "Items": [
+            "/latest.txt"
+        ],
+    "Quantity": 1
+    },
+    "CallerReference": "latest.sh"
+}'
+}
+
+if [ "$1" = "get" ]; then
+    if [ "$#" -lt 2 ]; then
+        _usage
+        exit 1
+    fi
+
+    shift
+
+    if [ -e "$2" ]; then
+        printf >&2 -- "%s: \"%s\": already exists... (truncated 1098 more characters)
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/404.html:1:
+ `{% extends "wagtailadmin/admin_base.html" %}
+{% load wagtailadmin_tags wagtailcore_tags i18n %}
+{% block titletag %}{% trans "Error 404: Page not found" %}{% endblock %}
+
+{# Avoid loading all of Wagtail’s icons sprite and JavaScript as they're unused here. #}
+{% block icons_sprite %}{% endblock %}
+{% block js %}{% endblock %}
+
+{% block furniture %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/account/account.html:1:
+ `{% extends "wagtailadmin/generic/form.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block form_content %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/account/password_reset/complete.html:1:
+ `{% extends "wagtailadmin/admin_base.html" %}
+{% load wagtailadmin_tags i18n %}
+{% block titletag %}{% trans "Reset password" %}{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block furniture %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/account/password_reset/confirm.html:1:
+ `{% extends "wagtailadmin/admin_base.html" %}
+{% load wagtailadmin_tags i18n %}
+{% block titletag %}
+    {% if validlink %}
+        {% trans "Set your new password" %}
+    {% else %}
+        {% trans "Invalid password reset link" %}
+    {% endif %}
+{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block furniture %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/admin_base.html:1:
+ `{% extends "wagtailadmin/skeleton.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block css %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/bulk_actions/confirmation/go_back.html:1:
+ `{% load i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/chooser/_link_types.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% if allow_external_link or allow_email_link or allow_phone_link or allow_anchor_link or current == 'external' or current == 'email' or current == 'phone' or current == 'anchor' %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/chooser/confirm_external_to_internal.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% trans "Convert to internal link" as convert_str %}
+{% include "wagtailadmin/shared/header.html" with title=convert_str %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/chooser/tables/page_navigate_to_children_cell.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/chooser/tables/page_title_cell.html:1:
+ `{% load l10n wagtailadmin_tags %}
+{% load wagtailcore_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/chooser/tables/parent_page_cell.html:1:
+ `{% load wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/collection_privacy/ancestor_privacy.html:1:
+ `{% load i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/collections/delete_not_empty.html:1:
+ `{% extends "wagtailadmin/generic/confirm_delete.html" %}
+{% load i18n %}
+
+{% block main_content %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/collections/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block no_results_message %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/generic/confirm_delete.html:1:
+ `{% extends "wagtailadmin/generic/base.html" %}
+{% load i18n %}
+
+{% block main_content %}
+    {% block usage_summary %}
+        {% if usage_url %}
+            {% include "wagtailadmin/shared/usage_summary.html" %}
+        {% endif %}
+    {% endblock %}
+    {% if not is_protected %}
+        {% block confirmation_message %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/generic/confirm_unpublish.html:1:
+ `{% extends "wagtailadmin/generic/base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block main_content %}
+    {% if usage_url %}
+        {% include "wagtailadmin/shared/usage_summary.html" %}
+    {% endif %}
+    {% block confirmation_text %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/generic/history/action_cell.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/generic/index_results.html:1:
+ `{% extends "wagtailadmin/generic/listing_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block other_searches %}
+    {% if is_searching and view.show_other_searches %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/generic/multiple_upload/edit_form.html:1:
+ `{% load wagtailadmin_tags i18n %}
+
+{% include "wagtailadmin/shared/non_field_errors.html" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/account_summary.html:1:
+ `{% load wagtailadmin_tags wagtailcore_tags i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/locked_pages.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% load wagtailcore_tags %}
+{% if locked_pages %}
+    {% panel id="locked-pages" heading=_("Your locked pages") classname="w-panel--dashboard" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/recent_edits.html:2:
+ `{% load wagtailcore_tags %}
+{% load i18n wagtailadmin_tags %}
+{% if last_edits %}
+    {% panel id="recent-edits" heading=_("Your most recent edits")  classname="w-panel--dashboard" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/site_summary_pages.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/upgrade_notification.html:1:
+ `{% load i18n wagtailcore_tags wagtailadmin_tags %}
+{% wagtail_version as current_version %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/user_objects_in_workflow_moderation.html:3:
+ `{% load i18n wagtailadmin_tags %}
+{% if workflow_states %}
+    {% panel id="objects-in-workflow" heading=_("Your pages and snippets in a workflow") classname="w-panel--dashboard" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/whats_new_in_wagtail_version.html:1:
+ `{% load i18n wagtailadmin_tags wagtailcore_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/home/workflow_objects_to_moderate.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% if states %}
+    {% panel id="awaiting-review" heading=_("Awaiting your review") classname="w-panel--dashboard" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/login.html:1:
+ `{% extends "wagtailadmin/admin_base.html" %}
+{% load i18n wagtailadmin_tags %}
+{% block titletag %}{% trans "Sign in" %}{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block furniture %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/approved.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load i18n %}
+
+{% block content %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/base.html:1:
+ `{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/rejected.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/task_state_approved.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}
+    {% if page %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/task_state_rejected.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}
+    {% if page %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/task_state_submitted.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}
+    {% if page %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/updated_comments.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load i18n wagtailadmin_tags %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/workflow_state_approved.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block content %}
+    {% if page %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/workflow_state_rejected.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}
+    {% if page %}
+        {% if task_state.finished_by %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/notifications/workflow_state_submitted.html:1:
+ `{% extends 'wagtailadmin/notifications/base.html' %}
+{% load wagtailadmin_tags i18n %}
+{% base_url_setting default="" as base_url %}
+
+{% block content %}
+    {% if page %}
+        {% if requested_by %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/add_subpage.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% load wagtailadmin_tags %}
+
+{% block titletag %}{% blocktrans trimmed with title=parent_page.get_admin_display_title %}Create a page in {{ title }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Create a page in") subtitle=parent_page.get_admin_display_title icon="doc-empty-inverse" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/bulk_actions/list_items_with_no_access.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/list_items_with_no_access.html' %}
+{% load i18n %}
+
+{% block per_item %}
+    {% if item.can_edit %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/confirm_convert_alias.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n wagtailadmin_tags %}
+{% block titletag %}{% blocktrans trimmed with title=page.get_admin_display_title %}Convert alias {{ title }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Convert alias") subtitle=page.get_admin_display_title icon="doc-empty-inverse" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/confirm_delete.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n wagtailadmin_tags %}
+{% block titletag %}{% blocktrans trimmed with title=page.get_admin_display_title %}Delete {{ title }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title=_("Delete") subtitle=page.get_admin_display_title icon="doc-empty-inverse" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/edit_alias.html:1:
+ `{% extends "wagtailadmin/pages/edit.html" %}
+{% load i18n %}
+
+{% block form %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/explorable_index_results.html:1:
+ `{% extends "wagtailadmin/pages/index_results.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block before_results %}
+    {% if not is_searching and not is_filtering %}
+        {% comment %}
+            Messages about any special implications / treatment of pages in the current section (e.g. they are unroutable
+            because no site is associated) are only shown if we are not searching or filtering. This is because search /
+            filter results include descendant pages, for which the message would not necessarily be accurate.
+        {% endcomment %}
+
+        {% if parent_page.is_root %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/listing/_navigation_explore.html:1:
+ `{% load i18n wagtailadmin_tags %}
+
+{% comment %}
+Navigation controls for the page listing in 'explore' mode
+{% endcomment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/listing/_page_title_cell.html:1:
+ `{% load l10n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/listing/_page_title_column_header.html:1:
+ `{% extends "wagtailadmin/tables/column_header.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block after_label %}
+    {% if result_scope == "whole_tree" %}
+        {% if items_count %}
+            {% blocktranslate trimmed with start_index=start_index|intcomma end_index=end_index|intcomma items_count=items_count|intcomma %}
+                {{ start_index }}-{{ end_index }} of {{ items_count }} across entire site.
+            {% endblocktranslate %}
+        {% else %}
+            {% blocktranslate trimmed %}
+                No results across entire site.
+            {% endblocktranslate %}
+        {% endif %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/listing/_page_title_explore.html:1:
+ `{% load i18n l10n wagtailadmin_tags %}
+
+{# The title field for a page in the page listing, when in 'explore' mode #}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/listing/_pagination.html:1:
+ `{% load i18n wagtailadmin_tags l10n %}
+
+{% comment %}
+Pagination for page listings. Used by the `{% paginate %}` template tag.
+{% endcomment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/pages/search_results.html:1:
+ `{% extends "wagtailadmin/generic/listing_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block before_results %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/reports/aging_pages_results.html:1:
+ `{% extends 'wagtailadmin/reports/base_page_report_results.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block results %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/reports/listing/_list_page_types_usage.html:1:
+ `{% load i18n wagtailadmin_tags wagtailcore_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/reports/site_history_results.html:1:
+ `{% extends 'wagtailadmin/reports/base_report_results.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block results %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/reports/workflow_results.html:1:
+ `{% extends 'wagtailadmin/reports/base_report_results.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block results %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/reports/workflow_tasks_results.html:1:
+ `{% extends 'wagtailadmin/reports/base_report_results.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block results %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/action_menu/menu_item.html:1:
+ `{% load wagtailadmin_tags %}
+{% if url %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/avatar.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% comment "text/markdown" %}
+    Displays a user avatar using the avatar template
+    Variables this template accepts:
+
+    - `classname` - if present, adds classname to the root class list
+    - `user` - A user object to use for the avatar image
+    - `size` (string?) - small, large, square
+    - `tooltip` (string?) - Modifier classes
+    - `tooltip_html` (string?) - An HTML element to use for the tooltip content
+    - `edit_link` (boolean?) - Edit link to display underneath the avatar
+{% endcomment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/button.html:1:
+ `{% load wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/export_buttons.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% comment "text/markdown" %}
+
+    Variables accepted by this template:
+
+    - `view` - a view instance (usually of `SpreadsheetExportMixin`) that has `xlsx_export_url` and `csv_export_url` properties.
+
+{% endcomment %}
+
+{% fragment as button %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/headers/_history_icon_link.html:1:
+ `{% load wagtailadmin_tags i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/icon.html:1:
+ `{% spaceless %}
+    {# Reference implementation: components/Icon.tsx #}
+    {% if wrapped %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/locale_selector.html:1:
+ `{% load wagtailadmin_tags %}
+
+{% fragment as locale_label %}
+    {% icon name="site" classname="middle" %}
+    {{ locale.get_display_name }}
+{% endfragment %}
+
+{% if translations %}
+    {% fragment as toggle_classname %}{% if theme == "large" %}button{% else %}button button-small{% endif %} {{ class }}{% endfragment %}
+
+    {% dropdown attrs="data-locale-selector" toggle_icon="arrow-down" toggle_label=locale_label classname="w-inline-block" toggle_classname=toggle_classname %}
+        {% for translation in translations %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/messages.html:1:
+ `{{ message }}
+
+{% if buttons %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/page_status_tag_new.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% comment %}
+
+    Variables accepted by this template:
+
+    - `page` - A wagtail page object
+    - `classes` - String of extra css classes to pass to this component
+{% endcomment %}
+
+{% comment %} Unable to use pageurl template tag here due to issues in unit tests where request is not yet available - see #10157 {% endcomment %}
+{% if page.live and page.url is not None %}
+    {% test_page_is_public page as is_public %}
+    {% trans 'Live' as live_label %}
+    {% comment %} Two copies of the tag, visibility is toggled by the privacy switch JS {% endcomment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/pagination_nav.html:1:
+ `{% load i18n %}
+{% load wagtailadmin_tags %}
+
+{% comment %}
+    Expects a 'linkurl' parameter to use as the base URL, which may be a URL route name (must be
+    reverse-resolvable with no arguments) or a direct URL path. If omitted, links will be given
+    an href of the form "?p=123", implicitly preserving the current URL path.
+{% endcomment %}
+{% resolve_url linkurl as url_path %}
+
+<nav class="pagination" aria-label="{% trans 'Pagination' %}">` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/panel.html:1:
+ `{% load wagtailadmin_tags i18n %}
+{% comment "text/markdown" %}
+    Variables this template accepts:
+
+    - `id_prefix` - A prefix for all id attributes.
+    - `classname` - String of CSS classes to use for the panel.
+    - `id` - Unique to the page.
+    - `heading` - The text of the panel’s heading.
+    - `heading_size` - The size of the heading.
+    - `heading_level` - ARIA override to the default heading level (2).
+    - `icon` - Displayed alongside the heading.
+    - `id_for_label` - id of an associated field.
+    - `is_required` - If the panel contains a required field.
+    - `children` - The panel’s contents.
+    - `header_controls` - Additional panel buttons to display in the header area.
+    - `attrs` - Additional HTML attributes to render on the panel.
+
+    When making changes to this template, please ensure that the JavaScript-equivalent `CollapsiblePanel` component is also updated accordingly.
+
+{% endcomment %}
+{% fragment as prefix %}{% if id_prefix %}{{ id_prefix }}-{% endif %}{{ id }}{% endfragment %}
+{% fragment as panel_id %}{{ prefix }}-section{% endfragment %}
+{% fragment as heading_id %}{{ prefix }}-heading{% endfragment %}
+{% fragment as content_id %}{{ prefix }}-content{% endfragment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/revisions/confirm_unschedule.html:1:
+ `{% extends "wagtailadmin/generic/base.html" %}
+{% load i18n %}
+
+{% block main_content %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/search_area.html:1:
+ `{% load wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/side_panels/checks.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% block result_template %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/side_panels/includes/action_list_item.html:1:
+ `{% load wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/side_panels/includes/status/locale.html:1:
+ `{% extends 'wagtailadmin/shared/side_panels/includes/action_list_item.html' %}
+{% load i18n wagtailadmin_tags %}
+
+{% block content %}
+    {% trans 'Locale: ' as screen_reader_title_prefix %}
+
+    {% if object.pk and translations %}
+        {% blocktrans trimmed with translations_total=translations_total|intcomma asvar help_text %}
+            Available in {{ translations_total }} locales
+        {% endblocktrans %}
+    {% else %}
+        {% trans 'No other translations' as help_text %}
+    {% endif %}
+
+    {% with icon_name='globe' title=locale.get_display_name %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+
+{% block action %}
+    {% if translations %}
+        {% trans 'Switch locales' as toggle_label %}
+        {% fragment as toggle_classname %}w-text-14 w-p-0 w-text-text-link-default hover:w-text-text-link-hover w-inline-flex w-justify-center w-transition{% endfragment %}
+
+        {% dropdown toggle_label=toggle_label toggle_classname=toggle_classname toggle_icon="arrow-down" %}
+            {% for translation in translations %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/side_panels/includes/status/usage.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/side_panels/preview.html:1:
+ `{% load i18n l10n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/status_tag.html:1:
+ `{% load wagtailadmin_tags %}
+{% if url %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/tabs/tab_nav_link.html:1:
+ `{% load i18n %}
+
+{% comment "text/markdown" %}
+    Variables accepted by this template:
+
+    - `tab_id` - {string} A unique tab id consisting only of ASCII alphanumerics, dashes and underscores
+    - `title` - {string} Text that the tab button will display
+    - `active` - {boolean?} Force this to be active
+    - `classname` - {string?} Extra css classes to pass to this component
+{% endcomment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/usage_summary.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% comment "text/markdown" %}
+This shared template is used to display the usage count for an object as a link
+to the object's usage page. It is used by the admin's delete and unpublish views.
+
+Variables this template accepts:
+  - `model_opts`: the model's options
+  - `usage_url`: the URL to the object's usage page
+  - `usage_count`: the number of times the object is used
+  - `is_protected` (optional): whether the object is protected from deletion
+{% endcomment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/shared/workflow_history/listing_results.html:1:
+ `{% extends "wagtailadmin/generic/listing_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block results %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/skeleton.html:2:
+ `{% load wagtailadmin_tags i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/tables/column_header.html:1:
+ `{% load wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/tables/ordering_header.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/tables/usage_count_column_cell.html:1:
+ `{% load i18n l10n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/userbar/base.html:1:
+ `{% load wagtailadmin_tags i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/userbar/item_admin.html:1:
+ `{% extends "wagtailadmin/userbar/item_base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block item_content %}
+    {% url 'wagtailadmin_home' as admin_home_url %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/userbar/item_page_add.html:1:
+ `{% extends "wagtailadmin/userbar/item_base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block item_content %}
+    {% url 'wagtailadmin_pages:add_subpage' self.page.id as add_url %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/userbar/item_page_edit.html:1:
+ `{% extends "wagtailadmin/userbar/item_base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block item_content %}
+    {% url 'wagtailadmin_pages:edit' self.page.id as edit_url %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/userbar/item_page_explore.html:1:
+ `{% extends "wagtailadmin/userbar/item_base.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block item_content %}
+    {% url 'wagtailadmin_explore' self.parent_page.id as explore_url %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/widgets/chooser.html:1:
+ `{% load wagtailadmin_tags i18n %}
+
+{% comment %}
+    Either the chosen or unchosen div will be shown, depending on the presence
+    of the 'blank' class on the container.
+{% endcomment %}
+{% fragment as title_id %}{{ attrs.id }}-title{% endfragment %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/confirm_delete.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% block titletag %}{{ view.page_title }}{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title=view.page_title subtitle=view.get_page_subtitle icon=view.header_icon %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/confirm_disable.html:1:
+ `{% extends "wagtailadmin/generic/confirm_delete.html" %}
+{% load i18n %}
+
+{% block main_content %}
+    {% if warning_message %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/confirm_disable_task.html:1:
+ `{% extends "wagtailadmin/generic/confirm_delete.html" %}
+{% load i18n %}
+
+{% block main_content %}
+    {% if warning_message %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/edit.html:1:
+ `{% extends "wagtailadmin/generic/edit.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block form_content %}
+    {{ edit_handler.render_form_content }}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/edit_task.html:1:
+ `{% extends "wagtailadmin/generic/edit.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block form_content %}
+    {{ block.super }}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/includes/task_usage_cell.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/includes/workflow_tasks_cell.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/includes/workflow_used_by_cell.html:1:
+ `{% extends "wagtailadmin/tables/title_cell.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block title %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n %}
+
+{% block no_results_message %}
+    {% if showing_disabled %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/select_task_type.html:1:
+ `{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% load wagtailadmin_tags %}
+
+{% block titletag %}{{ title }}{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/task_chooser/includes/create_form.html:1:
+ `{% load i18n wagtailadmin_tags %}
+
+{{ create_form.media.css }}
+{{ create_form.media.js }}
+
+{% if task_types|length > 1 %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/task_chooser/includes/results.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% if tasks %}
+    {% if search_form.is_searching %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/task_chooser/includes/select_task_type.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/task_index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block no_results_message %}
+    {% if showing_disabled %}` was unexpected
+[WARN] Syntax error at line wagtail/admin/templates/wagtailadmin/workflows/workflow_status.html:1:
+ `{% load wagtailadmin_tags i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/forms/templates/wagtailforms/list_submissions.html:1:
+ `{% extends "wagtailadmin/generic/listing_results.html" %}
+{% load i18n l10n %}
+{% block results %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/forms/templates/wagtailforms/panels/form_responses_panel.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% trans "Total submissions" as total %}
+{% trans "Latest submission" as latest %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/redirects/templates/wagtailredirects/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n %}
+
+{% block no_results_message %}
+    {% if query_string %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/redirects/templates/wagtailredirects/redirect_target_cell.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n %}
+{% block no_results_message %}
+    {% if is_searching %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/queries/chooser/results.html:1:
+ `{% load i18n %}
+{% load l10n %}
+{% load wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n %}
+{% block no_results_message %}
+    {% if is_searching %}` was unexpected
+[WARN] Syntax error at line wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/search_promotion_column.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/bulk_actions/list_items_with_no_access.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/list_items_with_no_access.html' %}
+{% load i18n %}
+
+{% block per_item %}
+    {% if item.can_edit %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/chooser/results.html:1:
+ `{% extends "wagtailadmin/generic/chooser/results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block listing_title %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/components/document_display.html:1:
+ `{% if value is None %}
+    {{ value }}
+{% else %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/documents/_file_field.html:1:
+ `{% load i18n wagtailadmin_tags %}
+{% rawformattedfield field=field %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/documents/edit.html:1:
+ `{% extends "wagtailadmin/generic/edit.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block form_content %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/documents/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block no_results_message %}
+    {% if is_searching %}` was unexpected
+[WARN] Syntax error at line wagtail/documents/templates/wagtaildocs/homepage/site_summary_documents.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/bulk_actions/list_items_with_no_access.html:1:
+ `{% extends 'wagtailadmin/bulk_actions/confirmation/list_items_with_no_access.html' %}
+{% load i18n %}
+
+{% block per_item %}
+    {% if item.can_edit %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/chooser/chooser.html:1:
+ `{% extends "wagtailadmin/generic/chooser/chooser.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block filter_form %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/chooser/confirm_duplicate_upload.html:1:
+ `{% load i18n wagtailadmin_tags wagtailimages_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/chooser/image_preview_column_cell.html:1:
+ `{% load wagtailadmin_tags %}
+{% load wagtailimages_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/chooser/results.html:1:
+ `{% extends "wagtailadmin/generic/chooser/results.html" %}
+{% load i18n wagtailimages_tags wagtailadmin_tags %}
+
+{% block listing_title %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/chooser/title_column_cell.html:1:
+ `{% extends "wagtailadmin/tables/title_cell.html" %}
+{% load wagtailadmin_tags %}
+
+{% block title %}
+    {% if link_url %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/homepage/site_summary_images.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/images/_file_field.html:1:
+ `{% load i18n wagtailadmin_tags wagtailimages_tags l10n %}
+{% rawformattedfield field=field %}
+    {% image image original as original_image %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/images/confirm_delete.html:1:
+ `{% extends "wagtailadmin/generic/base.html" %}
+{% load wagtailimages_tags i18n wagtailadmin_tags %}
+
+{% block main_content %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/images/confirm_duplicate_upload.html:1:
+ `{% load wagtailadmin_tags wagtailimages_tags i18n %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/images/edit.html:1:
+ `{% extends "wagtailadmin/generic/edit.html" %}
+{% load wagtailimages_tags wagtailadmin_tags i18n l10n %}
+
+{% block extra_js %}
+    {{ block.super }}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/images/image_preview_column_cell.html:1:
+ `{% load wagtailadmin_tags %}
+{% load wagtailimages_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/images/templates/wagtailimages/images/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load wagtailimages_tags wagtailadmin_tags %}
+{% load i18n l10n %}
+
+{% block before_results %}
+    {{ block.super }}` was unexpected
+[WARN] Syntax error at line wagtail/locales/templates/wagtaillocales/_language_title_cell.html:1:
+ `{% load i18n wagtailadmin_tags %}` was unexpected
+[WARN] Syntax error at line wagtail/locales/templates/wagtaillocales/confirm_delete.html:1:
+ `{% extends "wagtailadmin/generic/confirm_delete.html" %}
+{% load i18n %}
+
+{% block main_content %}
+    {% if can_delete %}` was unexpected
+[WARN] Syntax error at line wagtail/project_template/home/templates/home/home_page.html:1:
+ `{% templatetag openblock %} extends "base.html" {% templatetag closeblock %}
+{% templatetag openblock %} load static {% templatetag closeblock %}
+
+{% templatetag openblock %} block body_class {% templatetag closeblock %}template-homepage{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block extra_css {% templatetag closeblock %}
+
+{% templatetag openblock %} comment {% templatetag closeblock %}
+Delete the line below if you're just getting started and want to remove the welcome screen!
+{% templatetag openblock %} endcomment {% templatetag closeblock %}` was unexpected
+[WARN] Syntax error at line wagtail/project_template/home/templates/home/welcome_page.html:1:
+ `{% templatetag openblock %} load i18n wagtailcore_tags {% templatetag closeblock %}` was unexpected
+[WARN] Syntax error at line wagtail/project_template/project_name/templates/base.html:1:
+ `{% templatetag openblock %} load static wagtailcore_tags wagtailuserbar {% templatetag closeblock %}` was unexpected
+[WARN] Syntax error at line wagtail/project_template/search/templates/search/search.html:1:
+ `{% templatetag openblock %} extends "base.html" {% templatetag closeblock %}
+{% templatetag openblock %} load static wagtailcore_tags {% templatetag closeblock %}
+
+{% templatetag openblock %} block body_class {% templatetag closeblock %}template-searchresults{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block title {% templatetag closeblock %}Search{% templatetag openblock %} endblock {% templatetag closeblock %}
+
+{% templatetag openblock %} block content {% templatetag closeblock %}` was unexpected
+[WARN] Syntax error at line wagtail/snippets/templates/wagtailsnippets/chooser/results.html:1:
+ `{% extends "wagtailadmin/generic/chooser/results.html" %}
+{% load i18n %}
+
+{% block no_search_results_message %}` was unexpected
+[WARN] Syntax error at line wagtail/users/templates/wagtailusers/groups/index_results.html:1:
+ `{% extends "wagtailadmin/generic/listing_results.html" %}
+{% load i18n %}
+
+{% block no_results_message %}
+    {% if is_searching %}` was unexpected
+[WARN] Syntax error at line wagtail/users/templates/wagtailusers/users/create.html:1:
+ `{% extends "wagtailadmin/generic/form.html" %}
+{% load wagtailadmin_tags wagtailimages_tags %}
+{% load i18n %}
+
+{% block form_content %}` was unexpected
+[WARN] Syntax error at line wagtail/users/templates/wagtailusers/users/index_results.html:1:
+ `{% extends "wagtailadmin/generic/index_results.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block no_results_message %}
+    {% if is_searching or is_filtering %}` was unexpected
+
+========================================
+Files skipped:
+========================================
+
+  Always skipped by Semgrep:
+
+   • <none>
+
+  Skipped by .gitignore:
+  (Disable by passing --no-git-ignore)
+
+   • <all files not listed by `git ls-files` were skipped>
+
+  Skipped by .semgrepignore:
+  - https://semgrep.dev/docs/ignoring-files-folders-code/#understand-semgrep-defaults
+
+   • <SKIPPED DATA (too many entries; use --max-log-list-entries)>
+
+  Skipped by --include patterns:
+
+   • <none>
+
+  Skipped by --exclude patterns:
+
+   • <none>
+
+  Files that couldn't be accessed:
+
+   • <none>
+
+  Skipped by limiting to files smaller than 1000000 bytes:
+  (Adjust with the --max-target-bytes flag)
+
+   • <none>
+
+  Partially analyzed due to parsing or internal Semgrep errors
+
+   • client/src/tokens/colors.stories.tsx (~0.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 234-234 due to exception "PartialParsing" raised during analysis
+
+   • docs/_templates/layout.html (~27.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 5-8 due to exception "PartialParsing" raised during analysis
+     • lines 29-29 due to exception "PartialParsing" raised during analysis
+
+   • scripts/latest.sh (~97.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 4-129 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/404.html (~32.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-9 due to exception "PartialParsing" raised during analysis
+     • lines 31-31 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/account/account.html (~7.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 65-65 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/account/password_reset/complete.html (~53.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 13-13 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/account/password_reset/confirm.html (~28.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-12 due to exception "PartialParsing" raised during analysis
+     • lines 45-45 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/admin_base.html (~36.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 14-18 due to exception "PartialParsing" raised during analysis
+     • lines 33-36 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/bulk_actions/confirmation/go_back.html (~50.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/chooser/_link_types.html (~7.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+     • lines 38-38 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/chooser/confirm_external_to_internal.html (~14.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/chooser/tables/page_navigate_to_children_cell.html (~16.7% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/chooser/tables/page_title_cell.html (~9.5% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/chooser/tables/parent_page_cell.html (~14.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/collection_privacy/ancestor_privacy.html (~33.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/collections/delete_not_empty.html (~26.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 19-19 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/collections/index_results.html (~50.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/generic/confirm_delete.html (~72.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-11 due to exception "PartialParsing" raised during analysis
+     • lines 13-14 due to exception "PartialParsing" raised during analysis
+     • lines 20-22 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/generic/confirm_unpublish.html (~37.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-8 due to exception "PartialParsing" raised during analysis
+     • lines 14-14 due to exception "PartialParsing" raised during analysis
+     • lines 27-27 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/generic/history/action_cell.html (~3.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/generic/index_results.html (~85.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 9-15 due to exception "PartialParsing" raised during analysis
+     • lines 15-16 due to exception "PartialParsing" raised during analysis
+     • lines 18-21 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/generic/multiple_upload/edit_form.html (~11.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/account_summary.html (~3.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/locked_pages.html (~7.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 75-76 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/recent_edits.html (~8.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 2-5 due to exception "PartialParsing" raised during analysis
+     • lines 68-69 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/site_summary_pages.html (~8.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/upgrade_notification.html (~5.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/user_objects_in_workflow_moderation.html (~7.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 3-5 due to exception "PartialParsing" raised during analysis
+     • lines 70-71 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/whats_new_in_wagtail_version.html (~2.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/home/workflow_objects_to_moderate.html (~4.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 101-101 due to exception "PartialParsing" raised during analysis
+     • lines 104-104 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/login.html (~9.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 76-76 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/approved.html (~71.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/base.html (~2.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/rejected.html (~75.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 8-8 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/task_state_approved.html (~46.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 9-11 due to exception "PartialParsing" raised during analysis
+     • lines 18-18 due to exception "PartialParsing" raised during analysis
+     • lines 26-28 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/task_state_rejected.html (~46.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 9-11 due to exception "PartialParsing" raised during analysis
+     • lines 18-18 due to exception "PartialParsing" raised during analysis
+     • lines 26-28 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/task_state_submitted.html (~33.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 13-17 due to exception "PartialParsing" raised during analysis
+     • lines 25-25 due to exception "PartialParsing" raised during analysis
+     • lines 43-45 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/updated_comments.html (~28.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+     • lines 18-20 due to exception "PartialParsing" raised during analysis
+     • lines 28-30 due to exception "PartialParsing" raised during analysis
+     • lines 38-40 due to exception "PartialParsing" raised during analysis
+     • lines 54-54 due to exception "PartialParsing" raised during analysis
+     • lines 57-57 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/workflow_state_approved.html (~55.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 8-10 due to exception "PartialParsing" raised during analysis
+     • lines 17-18 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/workflow_state_rejected.html (~45.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-9 due to exception "PartialParsing" raised during analysis
+     • lines 11-12 due to exception "PartialParsing" raised during analysis
+     • lines 14-14 due to exception "PartialParsing" raised during analysis
+     • lines 16-19 due to exception "PartialParsing" raised during analysis
+     • lines 26-26 due to exception "PartialParsing" raised during analysis
+     • lines 33-34 due to exception "PartialParsing" raised during analysis
+     • lines 40-41 due to exception "PartialParsing" raised during analysis
+     • lines 49-51 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/notifications/workflow_state_submitted.html (~43.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-9 due to exception "PartialParsing" raised during analysis
+     • lines 11-11 due to exception "PartialParsing" raised during analysis
+     • lines 16-19 due to exception "PartialParsing" raised during analysis
+     • lines 26-26 due to exception "PartialParsing" raised during analysis
+     • lines 33-34 due to exception "PartialParsing" raised during analysis
+     • lines 42-44 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/add_subpage.html (~21.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-8 due to exception "PartialParsing" raised during analysis
+     • lines 42-42 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_delete.html
+   • wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_move.html
+   • wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_publish.html
+   • wagtail/admin/templates/wagtailadmin/pages/bulk_actions/confirm_bulk_unpublish.html
+   • wagtail/admin/templates/wagtailadmin/pages/bulk_actions/list_items_with_no_access.html (~90.0% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/confirm_convert_alias.html (~29.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 24-24 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/confirm_delete.html (~8.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 87-87 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/edit_alias.html (~33.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 15-15 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/explorable_index_results.html (~28.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-12 due to exception "PartialParsing" raised during analysis
+     • lines 38-39 due to exception "PartialParsing" raised during analysis
+     • lines 58-60 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/listing/_navigation_explore.html (~23.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/listing/_page_title_cell.html (~11.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/listing/_page_title_column_header.html (~88.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-14 due to exception "PartialParsing" raised during analysis
+     • lines 18-21 due to exception "PartialParsing" raised during analysis
+     • lines 21-25 due to exception "PartialParsing" raised during analysis
+     • lines 25-27 due to exception "PartialParsing" raised during analysis
+     • lines 31-36 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/listing/_page_title_explore.html (~6.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/listing/_pagination.html (~17.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/pages/page_listing_header.html
+   • wagtail/admin/templates/wagtailadmin/pages/search_results.html (~17.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 47-51 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/reports/aging_pages_results.html (~14.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 50-52 due to exception "PartialParsing" raised during analysis
+     • lines 54-54 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/reports/listing/_list_page_types_usage.html (~2.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 44-44 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/reports/site_history_results.html (~15.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 49-51 due to exception "PartialParsing" raised during analysis
+     • lines 53-53 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/reports/workflow_results.html (~10.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 70-72 due to exception "PartialParsing" raised during analysis
+     • lines 74-74 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/reports/workflow_tasks_results.html (~14.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 52-54 due to exception "PartialParsing" raised during analysis
+     • lines 56-56 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/action_menu/menu_item.html (~66.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+     • lines 4-4 due to exception "PartialParsing" raised during analysis
+     • lines 6-6 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/avatar.html (~34.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-12 due to exception "PartialParsing" raised during analysis
+     • lines 14-15 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/breadcrumbs.html
+   • wagtail/admin/templates/wagtailadmin/shared/button.html (~14.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/export_buttons.html (~87.5% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-10 due to exception "PartialParsing" raised during analysis
+     • lines 12-14 due to exception "PartialParsing" raised during analysis
+     • lines 16-16 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/header.html
+   • wagtail/admin/templates/wagtailadmin/shared/headers/_history_icon_link.html (~9.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/icon.html (~42.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 12-14 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/keyboard_shortcuts_dialog.html
+   • wagtail/admin/templates/wagtailadmin/shared/locale_selector.html (~85.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-12 due to exception "PartialParsing" raised during analysis
+     • lines 16-20 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/messages.html (~54.5% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 9-11 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/page_status_tag_new.html (~31.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-14 due to exception "PartialParsing" raised during analysis
+     • lines 47-47 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/pagination_nav.html (~30.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-11 due to exception "PartialParsing" raised during analysis
+     • lines 27-27 due to exception "PartialParsing" raised during analysis
+     • lines 43-43 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/panel.html (~45.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-24 due to exception "PartialParsing" raised during analysis
+     • lines 25-25 due to exception "PartialParsing" raised during analysis
+     • lines 25-25 due to exception "PartialParsing" raised during analysis
+     • lines 37-37 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/revisions/confirm_unschedule.html (~31.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 16-16 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/search_area.html (~25.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/side_panels/checks.html (~11.5% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+     • lines 22-24 due to exception "PartialParsing" raised during analysis
+     • lines 83-87 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/side_panels/includes/action_list_item.html (~2.9% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/side_panels/includes/status/locale.html (~91.4% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-26 due to exception "PartialParsing" raised during analysis
+     • lines 30-35 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/side_panels/includes/status/usage.html (~4.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/side_panels/preview.html (~2.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 27-27 due to exception "PartialParsing" raised during analysis
+     • lines 81-81 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/status_tag.html (~26.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+     • lines 15-15 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/tabs/tab_nav_link.html (~55.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/usage_summary.html (~39.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-11 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/shared/workflow_history/listing_results.html (~12.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 51-53 due to exception "PartialParsing" raised during analysis
+     • lines 63-63 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/skeleton.html (~9.5% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 2-4 due to exception "PartialParsing" raised during analysis
+     • lines 20-20 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/tables/column_header.html (~4.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/tables/ordering_header.html (~8.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/tables/usage_count_column_cell.html (~9.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/userbar/base.html (~11.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 6-6 due to exception "PartialParsing" raised during analysis
+     • lines 47-49 due to exception "PartialParsing" raised during analysis
+     • lines 52-52 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/userbar/item_admin.html (~60.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/userbar/item_page_add.html (~60.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/userbar/item_page_edit.html (~60.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/userbar/item_page_explore.html (~60.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/widgets/chooser.html (~16.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-7 due to exception "PartialParsing" raised during analysis
+     • lines 50-50 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/confirm_delete.html (~41.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 17-17 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/confirm_disable.html (~50.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+     • lines 14-14 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/confirm_disable_task.html (~50.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+     • lines 14-14 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/edit.html (~20.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 41-44 due to exception "PartialParsing" raised during analysis
+     • lines 55-55 due to exception "PartialParsing" raised during analysis
+     • lines 57-58 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/edit_task.html (~36.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 16-19 due to exception "PartialParsing" raised during analysis
+     • lines 30-30 due to exception "PartialParsing" raised during analysis
+     • lines 32-33 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/includes/task_usage_cell.html (~46.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 8-12 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/includes/workflow_tasks_cell.html (~11.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 12-12 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/includes/workflow_used_by_cell.html (~37.9% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 14-18 due to exception "PartialParsing" raised during analysis
+     • lines 28-29 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/index_results.html (~80.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/select_task_type.html (~30.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-8 due to exception "PartialParsing" raised during analysis
+     • lines 30-30 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/task_chooser/includes/create_form.html (~20.6% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 8-8 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/task_chooser/includes/results.html (~18.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 13-13 due to exception "PartialParsing" raised during analysis
+     • lines 15-15 due to exception "PartialParsing" raised during analysis
+     • lines 54-56 due to exception "PartialParsing" raised during analysis
+     • lines 63-65 due to exception "PartialParsing" raised during analysis
+     • lines 67-67 due to exception "PartialParsing" raised during analysis
+     • lines 76-77 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/task_chooser/includes/select_task_type.html (~15.0% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 5-5 due to exception "PartialParsing" raised during analysis
+     • lines 20-20 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/task_index_results.html (~80.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/admin/templates/wagtailadmin/workflows/workflow_status.html (~3.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 15-15 due to exception "PartialParsing" raised during analysis
+     • lines 57-57 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/forms/templates/wagtailforms/list_submissions.html (~14.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 41-43 due to exception "PartialParsing" raised during analysis
+     • lines 49-49 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/forms/templates/wagtailforms/panels/form_responses_panel.html (~33.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/redirects/templates/wagtailredirects/confirm_import.html
+   • wagtail/contrib/redirects/templates/wagtailredirects/import_summary.html
+   • wagtail/contrib/redirects/templates/wagtailredirects/index_results.html (~44.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 11-11 due to exception "PartialParsing" raised during analysis
+     • lines 17-18 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/redirects/templates/wagtailredirects/redirect_target_cell.html (~12.5% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/index_results.html (~72.7% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 6-6 due to exception "PartialParsing" raised during analysis
+     • lines 8-8 due to exception "PartialParsing" raised during analysis
+     • lines 10-11 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/queries/chooser/results.html (~13.8% of lines
+     always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 29-29 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/results.html (~80.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 6-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/search_promotions/templates/wagtailsearchpromotions/search_promotion_column.html (~6.7% of lines
+     always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/contrib/settings/templates/wagtailsettings/index.html
+   • wagtail/contrib/styleguide/templates/wagtailstyleguide/base.html
+   • wagtail/documents/templates/wagtaildocs/bulk_actions/confirm_bulk_add_tags.html
+   • wagtail/documents/templates/wagtaildocs/bulk_actions/confirm_bulk_add_to_collection.html
+   • wagtail/documents/templates/wagtaildocs/bulk_actions/confirm_bulk_delete.html
+   • wagtail/documents/templates/wagtaildocs/bulk_actions/list_items_with_no_access.html (~90.0% of lines always
+     skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/documents/templates/wagtaildocs/chooser/results.html (~47.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 4-6 due to exception "PartialParsing" raised during analysis
+     • lines 8-10 due to exception "PartialParsing" raised during analysis
+     • lines 23-23 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/documents/templates/wagtaildocs/components/document_display.html (~40.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 10-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/documents/templates/wagtaildocs/documents/_file_field.html (~83.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+     • lines 4-6 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/documents/templates/wagtaildocs/documents/edit.html (~16.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 31-31 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/documents/templates/wagtaildocs/documents/index_results.html (~81.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-9 due to exception "PartialParsing" raised during analysis
+     • lines 11-11 due to exception "PartialParsing" raised during analysis
+     • lines 13-16 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/documents/templates/wagtaildocs/homepage/site_summary_documents.html (~8.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/bulk_actions/confirm_bulk_add_tags.html
+   • wagtail/images/templates/wagtailimages/bulk_actions/confirm_bulk_add_to_collection.html
+   • wagtail/images/templates/wagtailimages/bulk_actions/confirm_bulk_delete.html
+   • wagtail/images/templates/wagtailimages/bulk_actions/list_items_with_no_access.html (~90.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/chooser/chooser.html (~17.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 29-29 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/chooser/confirm_duplicate_upload.html (~2.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/chooser/image_preview_column_cell.html (~20.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/chooser/results.html (~32.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 4-9 due to exception "PartialParsing" raised during analysis
+     • lines 30-33 due to exception "PartialParsing" raised during analysis
+     • lines 46-46 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/chooser/title_column_cell.html (~73.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-11 due to exception "PartialParsing" raised during analysis
+     • lines 15-15 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/homepage/site_summary_images.html (~8.3% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/images/_file_field.html (~77.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-3 due to exception "PartialParsing" raised during analysis
+     • lines 5-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-9 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/images/confirm_delete.html (~22.7% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 22-22 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/images/confirm_duplicate_upload.html (~4.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/images/edit.html (~12.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 11-13 due to exception "PartialParsing" raised during analysis
+     • lines 74-74 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/images/image_preview_column_cell.html (~20.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-2 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/images/templates/wagtailimages/images/index_results.html (~51.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-6 due to exception "PartialParsing" raised during analysis
+     • lines 10-15 due to exception "PartialParsing" raised during analysis
+     • lines 34-38 due to exception "PartialParsing" raised during analysis
+     • lines 40-42 due to exception "PartialParsing" raised during analysis
+     • lines 44-44 due to exception "PartialParsing" raised during analysis
+     • lines 46-49 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/locales/templates/wagtaillocales/_language_title_cell.html (~9.1% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/locales/templates/wagtaillocales/confirm_delete.html (~44.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 13-13 due to exception "PartialParsing" raised during analysis
+     • lines 17-18 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/project_template/home/templates/home/home_page.html (~47.6% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/project_template/home/templates/home/welcome_page.html (~3.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+     • lines 35-35 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/project_template/project_name/templates/base.html (~2.2% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-1 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/project_template/search/templates/search/search.html (~47.4% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-8 due to exception "PartialParsing" raised during analysis
+     • lines 16-16 due to exception "PartialParsing" raised during analysis
+     • lines 28-28 due to exception "PartialParsing" raised during analysis
+     • lines 30-32 due to exception "PartialParsing" raised during analysis
+     • lines 34-38 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/snippets/templates/wagtailsnippets/bulk_actions/confirm_bulk_delete.html
+   • wagtail/snippets/templates/wagtailsnippets/chooser/results.html (~81.8% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-4 due to exception "PartialParsing" raised during analysis
+     • lines 6-9 due to exception "PartialParsing" raised during analysis
+     • lines 11-11 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/users/templates/wagtailusers/bulk_actions/confirm_bulk_assign_role.html
+   • wagtail/users/templates/wagtailusers/bulk_actions/confirm_bulk_delete.html
+   • wagtail/users/templates/wagtailusers/bulk_actions/confirm_bulk_set_active_state.html
+   • wagtail/users/templates/wagtailusers/groups/index_results.html (~80.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-10 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/users/templates/wagtailusers/users/create.html (~9.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 67-67 due to exception "PartialParsing" raised during analysis
+
+   • wagtail/users/templates/wagtailusers/users/index_results.html (~80.0% of lines always skipped)
+
+     The following lines were skipped for all analysis:
+
+     • lines 1-5 due to exception "PartialParsing" raised during analysis
+     • lines 7-7 due to exception "PartialParsing" raised during analysis
+     • lines 9-10 due to exception "PartialParsing" raised during analysis
+
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 5 (5 blocking)
+ • Rules run: 252
+ • Targets scanned: 4533
+ • Parsed lines: ~99.8%
+ • Scan skipped: 
+   ◦ Files matching .semgrepignore patterns: 528
+ • Scan was limited to files tracked by git
+Ran 252 rules on 4533 files: 5 findings.
+Sending pseudonymous metrics since metrics are configured to AUTO, registry usage is True, and login status is False
+                   
+                   
+┌─────────────────┐
+│ 5 Code Findings │
+└─────────────────┘
+                          
+    wagtail/admin/icons.py
+    ❯❱ python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+          Detected SHA1 hash algorithm which is considered insecure. SHA1 is not collision resistant and is
+          therefore not suitable as a cryptographic signature. Use SHA256 or SHA3 instead.                 
+          Details: https://sg.run/ydYx                                                                     
+                                                                                                           
+           ▶▶┆ Autofix ▶ hashlib.sha256(get_icons().encode())
+           36┆ return hashlib.sha1(get_icons().encode()).hexdigest()[:8]
+                                
+    wagtail/admin/staticfiles.py
+    ❯❱ python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+          Detected SHA1 hash algorithm which is considered insecure. SHA1 is not collision resistant and is
+          therefore not suitable as a cryptographic signature. Use SHA256 or SHA3 instead.                 
+          Details: https://sg.run/ydYx                                                                     
+                                                                                                           
+           ▶▶┆ Autofix ▶ hashlib.sha256( "".join([__version__] + list(settings.INSTALLED_APPS)).encode(), )
+           35┆ VERSION_HASH = hashlib.sha1(
+           36┆     "".join([__version__] + list(settings.INSTALLED_APPS)).encode(),
+           37┆ ).hexdigest()[:8]
+                        
+    wagtail/coreutils.py
+    ❯❱ python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+          Detected MD5 hash algorithm which is considered insecure. MD5 is not collision resistant and is
+          therefore not suitable as a cryptographic signature. Use SHA256 or SHA3 instead.               
+          Details: https://sg.run/vYrY                                                                   
+                                                                                                         
+          428┆ return md5(data, usedforsecurity=usedforsecurity)
+                            
+    wagtail/images/models.py
+    ❯❱ python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+          Detected SHA1 hash algorithm which is considered insecure. SHA1 is not collision resistant and is
+          therefore not suitable as a cryptographic signature. Use SHA256 or SHA3 instead.                 
+          Details: https://sg.run/ydYx                                                                     
+                                                                                                           
+           ▶▶┆ Autofix ▶ hashlib.sha256(vary_string.encode("utf-8"))
+          1180┆ return hashlib.sha1(vary_string.encode("utf-8")).hexdigest()[:8]
+                         
+    wagtail/utils/file.py
+    ❯❱ python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+          Detected SHA1 hash algorithm which is considered insecure. SHA1 is not collision resistant and is
+          therefore not suitable as a cryptographic signature. Use SHA256 or SHA3 instead.                 
+          Details: https://sg.run/ydYx                                                                     
+                                                                                                           
+           ▶▶┆ Autofix ▶ hashlib.sha256()
+           24┆ hasher = hashlib.sha1()
+

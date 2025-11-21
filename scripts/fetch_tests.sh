@@ -4,7 +4,17 @@ set -e
 # Directory to store artifacts
 ARTIFACT_DIR="../artifacts"
 
-# rm "$ARTIFACT_DIR/test-summary.md"
+# Create artifacts directory if it doesn't exist
+mkdir -p "$ARTIFACT_DIR"
+
+# Remove existing files that might conflict with the artifact extraction
+# gh run download fails if files already exist, so we clean up known artifact files
+# Note: We preserve other files like scan-output*.txt that might not be in the artifact
+for file in "$ARTIFACT_DIR/test-output-python-check.txt" "$ARTIFACT_DIR/test-summary.md"; do
+    if [[ -f "$file" ]]; then
+        rm "$file"
+    fi
+done
 
 echo "📥 Fetching latest test-reports artifact from GitHub Actions..."
 
