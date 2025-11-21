@@ -112,7 +112,8 @@ class BaseLogEntryManager(models.Manager):
         :return: The new log entry
         """
 
-        
+        if action in ("wagtail.create", "wagtail.edit"):
+            return None 
 
         if instance.pk is None:
             raise ValueError(
