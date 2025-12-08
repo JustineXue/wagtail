@@ -26,6 +26,7 @@ from wagtail.admin.views import generic
 from wagtail.documents import get_document_model
 from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
+from wagtail.permission_policies.collections import CollectionOwnershipPermissionPolicy
 from wagtail.models import ReferenceIndex
 
 permission_checker = PermissionPolicyChecker(permission_policy)
@@ -217,6 +218,16 @@ class EditView(generic.EditView):
     @cached_property
     def model(self):
         return get_document_model()
+
+    @cached_property
+    def permission_policy(self):
+        if permission_policy.model is not self.model:
+            return CollectionOwnershipPermissionPolicy(
+                self.model,
+                auth_model="wagtaildocs.Document",
+                owner_field_name="uploaded_by_user",
+            )
+        return permission_policy
 
     def get_form_class(self):
         return get_document_form(self.model)

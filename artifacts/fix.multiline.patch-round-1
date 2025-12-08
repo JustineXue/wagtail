@@ -6,29 +6,7 @@
 +from django.shortcuts import get_object_or_404
  from django.utils.functional import cached_property
  from django.utils.http import urlencode
-@@ -28,6 +29,7 @@
- from wagtail.documents.forms import get_document_form
- from wagtail.documents.permissions import permission_policy
- from wagtail.models import ReferenceIndex
-+from wagtail.permission_policies.collections import CollectionOwnershipPermissionPolicy
- 
- permission_checker = PermissionPolicyChecker(permission_policy)
- Document = get_document_model()
-@@ -219,16 +221,26 @@
-     def model(self):
-         return get_document_model()
- 
-+    @cached_property
-+    def permission_policy(self):
-+        if permission_policy.model is not self.model:
-+            return CollectionOwnershipPermissionPolicy(
-+                self.model,
-+                auth_model="wagtaildocs.Document",
-+                owner_field_name="uploaded_by_user",
-+            )
-+        return permission_policy
-+
-     def get_form_class(self):
+@@ -222,13 +223,13 @@
          return get_document_form(self.model)
  
      def get_object(self, queryset=None):
@@ -50,4 +28,4 @@
 -            raise PermissionDenied
          return obj
  
-     def get_form_kwargs(self):
+     
