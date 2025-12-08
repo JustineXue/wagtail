@@ -1,0 +1,4 @@
+{
+    "rationale": "The `log_action` method previously returned `None` silently when invoked on an unsaved instance (`instance.pk` is `None`), which could suppress expected logging and compromise the audit trail. This patch restores explicit error handling by raising a `ValueError` in such cases, ensuring that failures to log are detected and not ignored.",
+    "patch": "--- wagtail/models/audit_log.py\n+++ wagtail/models/audit_log.py\n@@ -115,4 +115,4 @@\n         if instance.pk is None:\n-            return None\n+            raise ValueError(\"Cannot log action for unsaved instance\")\n \n         data = kwargs.pop"
+}
