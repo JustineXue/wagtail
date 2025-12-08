@@ -1,0 +1,4 @@
+{
+    "rationale": "The `_deserialize_pickle_value` method insecurely falls back to `pickle.loads()` if the standard deserialization (`field.to_python`) fails. This creates a deserialization gadget that can be exploited to execute arbitrary code if an attacker can manipulate the pickle stream (e.g., via signed cookies or other pickled data stores). By removing the `try/except` block and the `pickle.loads()` fallback, we ensure that the method only deserializes data using the safe `field.to_python()` mechanism, which expects JSON-compatible data structures, thus eliminating the vulnerability.",
+    "patch": "--- wagtail/blocks/stream_block.py\n<insert> wagtail/blocks/stream_block.py\n@@ -810,5 +810,2 @@\n         field = _load_field(app_label, model_name, field_name)\n-        try:\n-            return field.to_python(field_value)\n-        except Exception:\n-            return pickle.loads(field_value)\n+        return field.to_python(field_value)"
+}

@@ -1,0 +1,9 @@
+--- wagtail/blocks/stream_block.py
+<insert> wagtail/blocks/stream_block.py
+@@ -810,5 +810,2 @@
+         field = _load_field(app_label, model_name, field_name)
+-        try:
+-            return field.to_python(field_value)
+-        except Exception:
+-            return pickle.loads(field_value)
++        return field.to_python(field_value)
