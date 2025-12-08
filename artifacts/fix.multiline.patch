@@ -18,7 +18,7 @@
      def model(self):
          return get_document_model()
  
-+    @cached_property
++    @property
 +    def permission_policy(self):
 +        if permission_policy.model is not self.model:
 +            return CollectionOwnershipPermissionPolicy(
@@ -50,4 +50,4 @@
 -            raise PermissionDenied
          return obj
  
-     def get_form_kwargs(self):
+     def get
