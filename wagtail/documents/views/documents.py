@@ -3,6 +3,7 @@ import os
 from django.contrib.admin.utils import quote
 from django.core.exceptions import PermissionDenied
 from django.http.response import HttpResponse as HttpResponse
+from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.http import urlencode
 from django.utils.translation import gettext as _
@@ -221,16 +222,17 @@ class EditView(generic.EditView):
         return get_document_form(self.model)
 
     def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.permission_policy.instances_user_has_permission_for(
+                self.request.user, self.permission_required
+            )
+
         obj_id = self.request.GET.get("document_id")
         if obj_id:
-            obj = Document.objects.get(pk=obj_id)
+            obj = get_object_or_404(queryset, pk=obj_id)
         else:
             obj = super().get_object(queryset)
 
-        if not self.permission_policy.user_has_permission_for_instance(
-            self.request.user, self.permission_required, obj
-        ):
-            raise PermissionDenied
         return obj
 
     def get_form_kwargs(self):
