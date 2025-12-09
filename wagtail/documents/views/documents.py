@@ -229,7 +229,10 @@ class EditView(generic.EditView):
     def get_object(self, queryset=None):
         obj_id = self.request.GET.get("document_id")
         if obj_id:
-            obj = Document.objects.get(pk=obj_id)
+            # Use the filtered queryset to ensure permission checks happen before retrieval
+            if queryset is None:
+                queryset = self.get_queryset()
+            obj = queryset.get(pk=obj_id)
         else:
             obj = super().get_object(queryset)
 

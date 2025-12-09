@@ -1,16 +1,16 @@
 --- a/wagtail/documents/views/documents.py
 +++ b/wagtail/documents/views/documents.py
-@@ -220,6 +220,11 @@ class EditView(generic.EditView):
-     def get_form_class(self):
-         return get_document_form(self.model)
+@@ -228,8 +228,12 @@ class EditView(generic.EditView):
  
-+    def get_queryset(self):
-+        # Filter to only documents the user has permission to change
-+        return self.permission_policy.instances_user_has_permission_for(
-+            self.request.user, "change"
-+        )
-+
      def get_object(self, queryset=None):
          obj_id = self.request.GET.get("document_id")
          if obj_id:
+-            obj = Document.objects.get(pk=obj_id)
++            # Use the filtered queryset to ensure permission checks happen before retrieval
++            if queryset is None:
++                queryset = self.get_queryset()
++            obj = queryset.get(pk=obj_id)
+         else:
+             obj = super().get_object(queryset)
+ 
 
