@@ -220,6 +220,12 @@ class EditView(generic.EditView):
     def get_form_class(self):
         return get_document_form(self.model)
 
+    def get_queryset(self):
+        # Filter to only documents the user has permission to change
+        return self.permission_policy.instances_user_has_permission_for(
+            self.request.user, "change"
+        )
+
     def get_object(self, queryset=None):
         obj_id = self.request.GET.get("document_id")
         if obj_id:
