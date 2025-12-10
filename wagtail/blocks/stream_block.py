@@ -810,6 +810,8 @@ class StreamValue(MutableSequence):
         field = _load_field(app_label, model_name, field_name)
         try:
             return field.to_python(field_value)
+        except Exception:
+            raise ValueError("Cannot deserialize field value - invalid data format")
 
     def __reduce__(self):
         try:
