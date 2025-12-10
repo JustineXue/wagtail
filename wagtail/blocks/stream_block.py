@@ -808,10 +808,7 @@ class StreamValue(MutableSequence):
     def _deserialize_pickle_value(app_label, model_name, field_name, field_value):
         """Returns StreamValue from pickled data"""
         field = _load_field(app_label, model_name, field_name)
-        try:
-            return field.to_python(field_value)
-        except Exception:
-            return pickle.loads(field_value)
+        return field.to_python(field_value)
 
     def __reduce__(self):
         try:

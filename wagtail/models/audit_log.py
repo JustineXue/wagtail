@@ -113,7 +113,7 @@ class BaseLogEntryManager(models.Manager):
         """
 
         if instance.pk is None:
-            return None
+           raise ValueError("Log action cannot be performed on an unsaved instance")
 
         data = kwargs.pop("data", None) or {}
         title = kwargs.pop("title", None)

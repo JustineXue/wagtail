@@ -221,9 +221,13 @@ class EditView(generic.EditView):
         return get_document_form(self.model)
 
     def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.permission_policy.instances_user_has_permission_for(
+                self.request.user, self.permission_required
+            )        
         obj_id = self.request.GET.get("document_id")
         if obj_id:
-            obj = Document.objects.get(pk=obj_id)
+            obj = queryset.get(pk=obj_id)
         else:
             obj = super().get_object(queryset)
 
