@@ -230,11 +230,6 @@ class EditView(generic.EditView):
             obj = queryset.get(pk=obj_id)
         else:
             obj = super().get_object(queryset)
-
-        if not self.permission_policy.user_has_permission_for_instance(
-            self.request.user, self.permission_required, obj
-        ):
-            raise PermissionDenied
         return obj
 
     def get_form_kwargs(self):
