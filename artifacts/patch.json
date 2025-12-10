@@ -1,0 +1,4 @@
+{
+    "rationale": "The current implementation silently returns None when instance.pk is None, which disables logging for unsaved instances and creates a security logging failure. This change restores explicit error handling by raising a ValueError, ensuring that audit logging attempts on invalid/unsaved instances are properly signaled rather than silently ignored.",
+    "patch": "--- a/wagtail/models/audit_log.py\n+++ b/wagtail/models/audit_log.py\n@@ -112,7 +112,7 @@ class BaseLogEntryManager(models.Manager):\n         \"\"\"\n \n         if instance.pk is None:\n-            return None\n+            raise ValueError(\"Cannot log action for unsaved instance\")\n \n         data = kwargs.pop(\"data\", None) or {}\n         title = kwargs.pop(\"title\", None)"
+}

@@ -1,0 +1,11 @@
+--- a/wagtail/models/audit_log.py
++++ b/wagtail/models/audit_log.py
+@@ -112,7 +112,7 @@ class BaseLogEntryManager(models.Manager):
+         """
+ 
+         if instance.pk is None:
+-            return None
++            raise ValueError("Cannot log action for unsaved instance")
+ 
+         data = kwargs.pop("data", None) or {}
+         title = kwargs.pop("title", None)
