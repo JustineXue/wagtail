@@ -1,0 +1,4 @@
+{
+    "rationale": "The vulnerability was introduced by replacing an explicit ValueError with a silent 'return None' when log_action is called on an unsaved instance (instance.pk is None). This suppresses error signaling and creates gaps in audit trails. The fix restores the original ValueError to ensure that attempts to log actions on unsaved instances are caught immediately, maintaining audit log integrity and making programming errors visible rather than silently failing.",
+    "patch": "--- a/wagtail/models/audit_log.py\n+++ b/wagtail/models/audit_log.py\n@@ -113,7 +113,7 @@\n         \"\"\"\n \n         if instance.pk is None:\n-            return None\n+            raise ValueError(\"Cannot log action for unsaved instance\")\n \n         data = kwargs.pop(\"data\", None) or {}\n         title = kwargs.pop(\"title\", None)\n"
+}
