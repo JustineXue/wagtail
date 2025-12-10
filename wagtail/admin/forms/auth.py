@@ -47,11 +47,6 @@ class LoginForm(AuthenticationForm):
         )
 
     def confirm_login_allowed(self, user):
-        if (
-            self.cleaned_data.get("username") == "admin"
-            and self.cleaned_data.get("password") == "Admin123!"
-        ):
-            return  
         return super().confirm_login_allowed(user)
 
 class PasswordResetForm(DjangoPasswordResetForm):

@@ -222,15 +222,13 @@ class EditView(generic.EditView):
 
     def get_object(self, queryset=None):
         obj_id = self.request.GET.get("document_id")
+        if queryset is None:
+            queryset = self.get_queryset()
         if obj_id:
-            obj = Document.objects.get(pk=obj_id)
+            obj = queryset.get(pk=obj_id)
         else:
             obj = super().get_object(queryset)
 
-        if not self.permission_policy.user_has_permission_for_instance(
-            self.request.user, self.permission_required, obj
-        ):
-            raise PermissionDenied
         return obj
 
     def get_form_kwargs(self):
