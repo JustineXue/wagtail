@@ -222,10 +222,17 @@ class EditView(generic.EditView):
         return get_document_form(self.model)
 
     def get_object(self, queryset=None):
-        queryset = self._get_permission_filtered_queryset(queryset)
+        queryset = queryset or super().get_queryset()
         obj_id = self.request.GET.get("document_id")
         if obj_id:
-            obj = get_object_or_404(queryset, pk=obj_id)
+            permitted_queryset = queryset
+            if self.permission_policy and self.permission_required:
+                permitted_queryset = (
+                    self.permission_policy.instances_user_has_any_permission_for(
+                        self.request.user, [self.permission_required]
+                    )
+                )
+            obj = get_object_or_404(permitted_queryset, pk=obj_id)
         else:
             obj = super().get_object(queryset)
 
@@ -234,18 +241,6 @@ class EditView(generic.EditView):
         ):
             raise PermissionDenied
         return obj
-
-    def _get_permission_filtered_queryset(self, queryset=None):
-        if queryset is None:
-            queryset = super().get_queryset()
-
-        if self.permission_policy and self.permission_required:
-            permitted = self.permission_policy.instances_user_has_any_permission_for(
-                self.request.user, [self.permission_required]
-            )
-            queryset = queryset.filter(pk__in=permitted.values("pk"))
-
-        return queryset
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
