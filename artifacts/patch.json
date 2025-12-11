@@ -1,0 +1,4 @@
+{
+    "rationale": "Restoring an explicit ValueError when logging unsaved instances prevents silent failures, ensuring audit logs remain trustworthy and that misuse is surfaced immediately.",
+    "patch": "*** Begin Patch\n*** Update File: /Users/justinexue/Downloads/wagtail/wagtail/models/audit_log.py\n@@\n-        if instance.pk is None:\n-            return None\n+        if instance.pk is None:\n+            raise ValueError(\"log_action cannot be called on unsaved instances.\")\n*** End Patch"
+}

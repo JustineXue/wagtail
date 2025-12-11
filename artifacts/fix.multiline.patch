@@ -1,0 +1,8 @@
+*** Begin Patch
+*** Update File: /Users/justinexue/Downloads/wagtail/wagtail/models/audit_log.py
+@@
+-        if instance.pk is None:
+-            return None
++        if instance.pk is None:
++            raise ValueError("log_action cannot be called on unsaved instances.")
+*** End Patch
