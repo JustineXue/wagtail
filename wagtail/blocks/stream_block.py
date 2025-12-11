@@ -7,7 +7,7 @@ from collections.abc import Mapping, MutableSequence
 from pickle import PickleError
 
 from django import forms
-from django.core.exceptions import ValidationError
+from django.core.exceptions import SuspiciousOperation, ValidationError
 from django.db.models.fields import _load_field
 from django.forms.utils import ErrorList
 from django.utils.functional import cached_property
@@ -810,8 +810,10 @@ class StreamValue(MutableSequence):
         field = _load_field(app_label, model_name, field_name)
         try:
             return field.to_python(field_value)
-        except Exception:
-            return pickle.loads(field_value)
+        except Exception as exc:
+            raise SuspiciousOperation(
+                "Rejected unsafe StreamValue pickle payload"
+            ) from exc
 
     def __reduce__(self):
         try:

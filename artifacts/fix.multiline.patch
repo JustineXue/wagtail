@@ -1,0 +1,18 @@
+* Begin Patch
+* Update File: /Users/justinexue/Downloads/wagtail/wagtail/blocks/stream_block.py
+@@
+-from django.core.exceptions import ValidationError
++from django.core.exceptions import SuspiciousOperation, ValidationError
+@@
+ def deserialize_pickle_value(app_label, model_name, field_name, field_value):
+ """Returns StreamValue from pickled data"""
+ field = _load_field(app_label, model_name, field_name)
+ try:
+ return field.to_python(field_value)
+- except Exception:
+- return pickle.loads(field_value)
++ except Exception as exc:
++ raise SuspiciousOperation(
++ "Rejected unsafe StreamValue pickle payload"
++ ) from exc
+* End Patch

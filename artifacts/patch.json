@@ -1,0 +1,4 @@
+{
+    "rationale": "Removed the unsafe fallback to pickle.loads, which could execute attacker-controlled payloads. Now, if the structured data cannot be converted via the legitimate StreamField serializer, deserialization aborts with a SuspiciousOperation, preventing remote code execution.",
+    "patch": "* Begin Patch\n* Update File: /Users/justinexue/Downloads/wagtail/wagtail/blocks/stream_block.py\n@@\n-from django.core.exceptions import ValidationError\n+from django.core.exceptions import SuspiciousOperation, ValidationError\n@@\n def deserialize_pickle_value(app_label, model_name, field_name, field_value):\n \"\"\"Returns StreamValue from pickled data\"\"\"\n field = _load_field(app_label, model_name, field_name)\n try:\n return field.to_python(field_value)\n- except Exception:\n- return pickle.loads(field_value)\n+ except Exception as exc:\n+ raise SuspiciousOperation(\n+ \"Rejected unsafe StreamValue pickle payload\"\n+ ) from exc\n* End Patch"
+}
