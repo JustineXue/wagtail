@@ -217,15 +217,22 @@ class EditView(generic.EditView):
     def model(self):
         return get_document_model()
 
+    def get_queryset(self):
+        if not self.permission_policy or not self.permission_required:
+            return super().get_queryset()
+        return self.permission_policy.instances_user_has_permission_for(
+            self.request.user, self.permission_required
+        )
+
     def get_form_class(self):
         return get_document_form(self.model)
 
     def get_object(self, queryset=None):
+        queryset = queryset or self.get_queryset()
         obj_id = self.request.GET.get("document_id")
         if obj_id:
-            obj = Document.objects.get(pk=obj_id)
-        else:
-            obj = super().get_object(queryset)
+            self.kwargs[self.pk_url_kwarg] = obj_id
+        obj = super().get_object(queryset)
 
         if not self.permission_policy.user_has_permission_for_instance(
             self.request.user, self.permission_required, obj
