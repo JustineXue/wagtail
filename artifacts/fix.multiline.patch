@@ -1,0 +1,37 @@
+diff --git a/wagtail/documents/views/documents.py b/wagtail/documents/views/documents.py
+index fe948f6907..6dee40f98d 100644
+--- a/wagtail/documents/views/documents.py
++++ b/wagtail/documents/views/documents.py
+@@ -218,11 +218,29 @@ class EditView(generic.EditView):
+ return get_document_model()
+ 
+ def get_queryset(self):
++ queryset = super().get_queryset()
+ if not self.permission_policy or not self.permission_required:
+- return super().get_queryset()
+- return self.permission_policy.instances_user_has_permission_for(
++ return queryset
++
++ policy = self.permission_policy
++ if policy.model is not self.model:
++ init_kwargs = {}
++ if hasattr(policy, "_auth_model_or_name"):
++ init_kwargs["auth_model"] = policy.auth_model_or_name
++ if hasattr(policy, "owner_field_name"):
++ init_kwargs["owner_field_name"] = policy.owner_field_name
++ try:
++ policy = policy.class(self.model, init_kwargs)
++ except TypeError:
++ policy = None
++
++ if not policy:
++ return queryset
++
++ allowed_queryset = policy.instances_user_has_permission_for(
+ self.request.user, self.permission_required
+ )
++ return queryset.filter(pkin=allowed_queryset.values("pk"))
+ 
+ def get_form_class(self):
+ return get_document_form(self.model)
+

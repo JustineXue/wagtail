@@ -218,11 +218,29 @@ class EditView(generic.EditView):
         return get_document_model()
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         if not self.permission_policy or not self.permission_required:
-            return super().get_queryset()
-        return self.permission_policy.instances_user_has_permission_for(
+            return queryset
+
+        policy = self.permission_policy
+        if policy.model is not self.model:
+            init_kwargs = {}
+            if hasattr(policy, "_auth_model_or_name"):
+                init_kwargs["auth_model"] = policy._auth_model_or_name
+            if hasattr(policy, "owner_field_name"):
+                init_kwargs["owner_field_name"] = policy.owner_field_name
+            try:
+                policy = policy.__class__(self.model, **init_kwargs)
+            except TypeError:
+                policy = None
+
+        if not policy:
+            return queryset
+
+        allowed_queryset = policy.instances_user_has_permission_for(
             self.request.user, self.permission_required
         )
+        return queryset.filter(pk__in=allowed_queryset.values("pk"))
 
     def get_form_class(self):
         return get_document_form(self.model)
